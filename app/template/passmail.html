@@ -1,0 +1,22 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Home {% endblock title %}
+
+{% block content %}
+
+    <div class="">
+        <h3>Recover {{ type }}</h3>
+        <form action="{% url 'send-pass-mail-confirm' %}" method="post">
+            {% csrf_token %}
+
+            <div class="">
+                <label for="email">Your email</label>
+                <input type="hidden" name="type" value="{{ type }}"/>
+                <input id="email" type="email" name="email" maxlength=50 required>
+            </div>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+{% endblock content %}

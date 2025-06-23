@@ -1,0 +1,35 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Login {% endblock title %}
+
+{% block content %}
+
+    <div class="">
+        <h3>Login</h3>
+        <form method="post">
+            {% csrf_token %}
+            <div class="">
+                <label for="username">Username</label>
+                <input id="username" type="text" name="username" maxlength=50 required>
+            </div>
+
+            <div class="">
+                <label for="password">Password</label>
+                <input id="password" type="password" name="password" maxlength=50 required>
+            </div>
+
+            <div class="">
+                <button type="submit" name="submit">Login</button>
+            </div>
+        </form>
+
+        <div class="">Or <a href="{% url "register" %}">create an account</a></div>
+        <dialog id="popup">
+            <div class=""><a href="{% url "pass-mail" %}?type=username">forgot username</a></div>
+            <div class=""><a href="{% url "pass-mail" %}?type=password">forgot password</a></div>
+            <button onclick="popup.close()">Close</button>
+        </dialog>
+        <div class=""><button onclick="popup.showModal()">Need Help?</button></div>
+    </div>
+
+{% endblock content %}

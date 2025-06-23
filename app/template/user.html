@@ -1,0 +1,39 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} {{ profile.username }}'s Profile {% endblock title %}
+
+{% block content %}
+    <div class="">
+        <aside class="">
+            <img src="/static{{ profile.pic.url }}" alt="profile picture">
+            <h3>{{ profile.username }}</h3>
+            <p id="flname">
+            {% if profile.first_name %} {{ profile.first_name }} {% endif %}
+            {% if profile.last_name %} {{ profile.last_name }} {% endif %}
+                <a href="mailto:{{ profile.email }}">Contact</a>
+            </p>
+            <div class="">
+                {% if profile.bio %}
+                <p>Bio</p>
+                <p>{{ profile.bio }}</p>
+                {% endif %}
+            </div>
+
+            <p><em>joined on {{ profile.date_joined|date:"M d Y \a\t H:i" }}</em></p>
+        </aside>
+
+        <main>
+            <div class="">
+                {% if user.is_authenticated and user == profile %}
+                <h3>Your Posts</h3>
+                {% else %}
+                <h3>{{ profile.username }}'s Posts</h3>
+                {% endif %}
+                {% if user.is_authenticated %}
+                <!-- url to add a post -->
+                {% endif %}
+            </div>
+        </main>
+    </div>
+
+{% endblock content %}

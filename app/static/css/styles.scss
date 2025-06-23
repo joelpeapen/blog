@@ -1,0 +1,29 @@
+$red: #ff4343;
+$red-dark: #de3b3b;
+$orange: #fe8019;
+$yellow: #fabd2f;
+$green: #4cca51;
+$green-dark: #4caf50;
+$grey: #9198a1;
+$grey-dark: #3d444d;
+$white: #ffffff;
+$white-dark: #f1f3f5;
+$blue: #54a4dc;
+$blue-dark: #4793cc;
+$blue-light: #1f6feb;
+$navy: #082437;
+$navy-light: #304f64;
+$navy-dark: #0c1a24;
+$navy-bg: #04121b;
+$shadow: #0000011a;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}

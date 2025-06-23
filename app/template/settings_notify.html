@@ -1,0 +1,44 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Account Settings {% endblock title %}
+
+{% block content %}
+
+    <div class="">
+        <aside class="">
+            <p class="">User settings</p>
+            <a href="{% url 'settings' %}">Profile</a>
+            <a href="{% url 'settings-account' %}">Account</a>
+            <a class="" href="{% url 'settings-notify' %}">Notifications</a>
+        </aside>
+
+        <div class="">
+            <div class="">
+                <p class="">Email notifications</p>
+                <form action="{% url 'settings-notify' %}?type=comments" method="post">
+                    {% csrf_token %}
+                    <div class="">
+                        <span>Comments on posts</span>
+                        <label class="" for="on-comment">
+                            <input onChange="this.form.submit()" id="on-comment" type="checkbox" name="notify-comment" {% if notify.on_comment == True %}checked{% endif %}>
+                            <span class=""></span>
+                        </label>
+                    </div>
+                </form>
+
+                <form action="{% url 'settings-notify' %}?type=subscribe" method="post">
+                    {% csrf_token %}
+                    <div class="">
+                        <span>New subscribers</span>
+                        <label class="" for="on-subscribe">
+                            <input onChange="this.form.submit()" id="on-subscribe" type="checkbox" name="notify-sub" {% if notify.on_sub == True %}checked{% endif %}>
+                            <span class=""></span>
+                        </label>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock content %}

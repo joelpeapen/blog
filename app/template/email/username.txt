@@ -1,0 +1,1 @@
+Your Blog++ username is <strong>{{ username }}</strong>

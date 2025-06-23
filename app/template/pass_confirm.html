@@ -1,0 +1,25 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Home {% endblock title %}
+
+{% block content %}
+
+    <div class="">
+        <main>
+            {% if is_password_confirmed == True %}
+                <p>Your password has been sucessfully reset. <a href="{% url "login" %}">Login</a></p>
+            {% endif %}
+
+            {% if is_password_confirmed != True %}
+            <p>Check your email for the password reset link</p>
+
+            <form action="{% url 'send-pass-mail-confirm' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="type" value="{{ type }}"/>
+                <button type="submit">Resend Password Reset Email</button>
+            </form>
+            {% endif %}
+        </main>
+    </div>
+
+{% endblock content %}

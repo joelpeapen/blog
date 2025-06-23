@@ -1,0 +1,27 @@
+from django.contrib import admin
+from django.urls import path
+
+from app import views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', views.Index.as_view(), name="home"),
+    path('about/', views.About.as_view(), name="about"),
+    path('register/', views.Register.as_view(), name="register"),
+    path('login/', views.Login.as_view(), name="login"),
+    path('logout/', views.Logout.as_view(), name="logout"),
+    path('user/', views.appUser.as_view(), name="user"),
+    path("user/settings/", views.Settings.as_view(), name="settings"),
+    path("user/settings/account/", views.SettingsAccount.as_view(), name="settings-account"),
+    path("user/settings/notifications/", views.SettingsNotify.as_view(), name="settings-notify"),
+    path("user/delete/", views.UserDelete.as_view(), name="delete-user"),
+    path("user/<str:username>/", views.appUser.as_view(), name="user"),
+    path("send-email-confirm/", views.send_email_confirm, name="send-email-confirm"),
+    path("email-confirm/", views.set_email_confirm, name="set-email-confirm"),
+    path("email-change/", views.email_change, name="email-change"),
+    path("email-change-confirm/", views.set_email_change_confirm, name="email-change-confirm"),
+    path("pass-mail/", views.Passmail.as_view(), name="pass-mail"),
+    path("passreset", views.Passreset.as_view(), name="pass-reset"),
+    path("send-pass-mail-confirm/", views.send_pass_mail_confirm, name="send-pass-mail-confirm"),
+    path("set-password-confirm/", views.set_password_confirm, name="set-password-confirm"),
+]

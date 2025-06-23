@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% load static %}
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}{% endblock %}</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css" >
+        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+        <!-- <link rel="stylesheet" type="text/css" href="{# % static 'css/debug.css' % #}"> -->
+        <!-- <link rel="stylesheet" type="text/css" href="{# % static 'css/bulma.min.css' % #}"> -->
+        <script src="{% static 'js/index.js' %}"></script>
+    </head>
+    <body>
+        {% include '../components/navbar.html' %}
+
+        {% block content %}{% endblock %}
+
+        {% include '../components/messages.html' %}
+    </body>
+</html>

@@ -1,0 +1,57 @@
+{% extends "layouts/base.html" %}
+
+    {% block title %} Settings {% endblock title %}
+
+    {% block content %}
+
+    <div class="">
+        <aside class="">
+            <p class="">User settings</p>
+            <a class="" href="{% url 'settings' %}">Profile</a>
+            <a href="{% url 'settings-account' %}">Account</a>
+            <a href="{% url 'settings-notify' %}">Notifications</a>
+        </aside>
+
+        <div class="">
+            <div class="">
+                <p class="">Public Profile</p>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="">
+                        <label for="pic">Profile Picture</label>
+                        <div class="">
+                            <img src="/static{{ user.pic.url }}" alt="profile picture">
+                            <input id="pic" name="pic" type="file" accept="image/*">
+                        </div>
+                    </div>
+
+                    <div class="">
+                        <label for="username">Username</label>
+                        <input id="username" type="text" name="username" maxlength=50 value="{{ user.username }}" required>
+                    </div>
+
+                    <div class="">
+                        <label for="fname">First Name</label>
+                        <input id="fname" type="text" name="fname" maxlength=50 value="{{ user.first_name }}">
+                    </div>
+
+                    <div class="">
+                        <label for="lname">Last Name</label>
+                        <input id="lname" type="text" name="lname" maxlength=50 value="{{ user.last_name }}">
+                    </div>
+
+                    <div class="">
+                        <label for="bio">Bio</label>
+                        <textarea id="bio" name="bio" maxlength=500 rows=10, cols=24>{{ user.bio }}</textarea>
+                    </div>
+
+                    <div class="">
+                        <button type="submit" name="submit">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {% endblock content %}

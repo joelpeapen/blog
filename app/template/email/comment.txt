@@ -1,0 +1,3 @@
+<strong>{{ commenter }}</strong> posted a comment on your post <strong>{{ post.name }}</strong>
+
+<p>{{ comment }}</p>

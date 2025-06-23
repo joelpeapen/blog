@@ -1,0 +1,18 @@
+<nav>
+    <a class="" href="/">Home</a>
+    <a class="" href="{% url "about" %}">About</a>
+    {% if user.is_authenticated %}
+    <button id="" class="">
+        <img class="" src="/static{{ user.pic.url }}" alt="profile picture">
+        {{ user.username }}
+    </button>
+    <div id="umenu" class="">
+        <p class="">{{ user.username }}</p>
+        <a href="{% url "user" %}">Profile</a>
+        <a href="{% url "settings" %}">Settings</a>
+        <a href="{% url "logout" %}">Log out</a>
+    </div>
+    {% else %}
+    <a class="" href="{% url "login" %}">Login</a>
+    {% endif %}
+</nav>

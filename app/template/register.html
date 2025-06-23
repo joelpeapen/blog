@@ -1,0 +1,35 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Register {% endblock title %}
+
+{% block content %}
+
+    <div class="">
+        <h3>Register</h3>
+        <form method="post">
+            {% csrf_token %}
+            <div class="">
+                <label for="username">Username</label>
+                <input id="username" type="text" name="username" maxlength=50 required>
+            </div>
+
+            <div class="">
+                <label for="email">Email</label>
+                <input id="email" type="email" name="email" maxlength=50 required>
+            </div>
+
+            <div class="">
+                <label for="password">Password</label>
+                <input id="password" type="password" name="password" maxlength=50 required>
+            </div>
+
+            <div class="">
+                <button type="submit" name="submit">Register</button>
+            </div>
+        </form>
+
+    <div>Have an account? <a href="{% url "login" %}">Login</a></div>
+
+    </div>
+
+{% endblock content %}
