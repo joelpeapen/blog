@@ -1,0 +1,8 @@
+<aside class="column settings menu">
+    <div class="columns">
+        <h5 class="column title is-5">Settings</h5>
+        <a class="column {% if active == "profile" %}active{% endif %}" href="{% url 'settings' %}">Profile</a>
+        <a class="column {% if active == "account" %}active{% endif %}" href="{% url 'settings-account' %}">Account</a>
+        <a class="column {% if active == "notify" %}active{% endif %}" href="{% url 'settings-notify' %}">Notifications</a>
+    </div>
+</aside>

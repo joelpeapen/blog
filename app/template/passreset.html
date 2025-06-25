@@ -4,19 +4,24 @@
 
 {% block content %}
 
-    <div class="">
-        <h3>Reset Password</h3>
+    <div class="container form">
+        <h3 class="title">Reset Password</h3>
         <form action="{% url 'set-password-confirm' %}" method="post">
             {% csrf_token %}
 
             <input type="hidden" name="token" value="{{ token_id }}"/>
-            <div class="">
-                <label for="password">Password</label>
-                <input id="password" type="password" name="password" maxlength=50 required>
+
+            <div class="field">
+                <label class="label" for="password">Password</label>
+                <p class="control">
+                    <input id="password" class="input" type="password" name="password" maxlength=50 required>
+                </p>
             </div>
 
-            <div class="">
-                <button type="submit" name="submit">Reset</button>
+            <div class="field">
+                <p class="control">
+                    <button class="button is-success" type="submit">Reset Password</button>
+                </p>
             </div>
         </form>
     </div>

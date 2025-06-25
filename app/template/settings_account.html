@@ -4,64 +4,70 @@
 
 {% block content %}
 
-    <div class="">
-        <aside class="">
-            <p class="">User settings</p>
-            <a href="{% url 'settings' %}">Profile</a>
-            <a class="" href="{% url 'settings-account' %}">Account</a>
-            <a href="{% url 'settings-notify' %}">Notifications</a>
-        </aside>
+    <div class="columns">
+        {% include 'components/settings_menu.html' with active="account"%}
 
-        <div class="">
-            <div class="">
-                <p class="">Change Email</p>
-                <form action="{% url 'email-change' %}" method="post">
-                    {% csrf_token %}
+        <div class="column">
+            <div class="forms">
+                <div class="form">
+                    <p class="">Change Email</p>
+                    <form action="{% url 'email-change' %}" method="post">
+                        {% csrf_token %}
 
-                    <div class="">
-                        <label for="email">New Email</label>
-                        <input id="email" type="email" name="email" maxlength=50 placeholder="{{ user.email }}" required>
-                    </div>
+                        <div class="field">
+                            <label class="label" for="email">New Email</label>
+                            <div class="control">
+                                <input id="email" class="input" type="email" name="email" maxlength=50 placeholder="{{ user.email }}" required>
+                            </div>
+                        </div>
 
-                    <div class="">
-                        <button type="submit" name="submit">Save</button>
-                    </div>
-                </form>
-            </div>
+                        <div class="field">
+                            <p class="control">
+                                <button class="button is-success" type="submit" name="submit">Save</button>
+                            </p>
+                        </div>
+                    </form>
+                </div>
 
-            <div class="">
-                <p class="">Change Password</p>
-                <form method="post">
-                    {% csrf_token %}
+                <div class="form">
+                    <p class="">Change Password</p>
+                    <form method="post">
+                        {% csrf_token %}
 
-                    <div class="">
-                        <label for="old-password">Old Password</label>
-                        <input id="old-password" type="password" name="old-password" maxlength=50 required>
-                    </div>
+                        <div class="field">
+                            <label class="label" for="old-password">Old Password</label>
+                            <p class="control">
+                                <input id="old-password" class="input" type="password" name="old-password" maxlength=50 required>
+                            </p>
+                        </div>
 
-                    <div class="">
-                        <label for="password">New Password</label>
-                        <input id="password" type="password" name="password" maxlength=50 required>
-                    </div>
+                        <div class="field">
+                            <label class="label" for="password">New Password</label>
+                            <p class="control">
+                                <input id="password" class="input" type="password" name="password" maxlength=50 required>
+                            </p>
+                        </div>
 
-                    <div class="">
-                        <label for="confirm-pw">Confirm New Password</label>
-                        <input id="confirm-pw" type="password" name="confirm-pw" maxlength=50 required>
-                    </div>
+                        <div class="field">
+                            <label class="label" for="confirm-pw">Confirm New Password</label>
+                            <p class="control">
+                                <input id="confirm-pw" class="input" type="password" name="confirm-pw" maxlength=50 required>
+                            </p>
+                        </div>
 
-                    <div class="">
-                        <button type="submit" name="submit">Save</button>
-                    </div>
-                </form>
-
-            </div>
-
-            <div class="">
-                <p class="">Danger Zone</p>
-                <form action="{% url "delete-user" %}" method="post">
-                    {% csrf_token %}
-                    <button id="delete-user" type="submit" name=submit>Delete Account</button>
-                </form>
+                        <div class="field">
+                            <p class="control">
+                                <button class="button is-success" type="submit" name="submit">Save</button>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+                <div class="danger">
+                    <form action="{% url "delete-user" %}" method="post">
+                        {% csrf_token %}
+                        <button class="button is-danger is-dark" id="delete-user" type="submit" name=submit>Delete Account</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

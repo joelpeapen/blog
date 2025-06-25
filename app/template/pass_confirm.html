@@ -4,22 +4,23 @@
 
 {% block content %}
 
-    <div class="">
-        <main>
-            {% if is_password_confirmed == True %}
-                <p>Your password has been sucessfully reset. <a href="{% url "login" %}">Login</a></p>
-            {% endif %}
+    {% if is_password_confirmed == True %}
+        <p>Your password has been sucessfully reset. <a href="{% url "login" %}">Login</a></p>
+    {% endif %}
 
-            {% if is_password_confirmed != True %}
-            <p>Check your email for the password reset link</p>
+    {% if is_password_confirmed != True %}
+    <p>Check your email for the password reset link</p>
 
-            <form action="{% url 'send-pass-mail-confirm' %}" method="post">
-                {% csrf_token %}
+    <form action="{% url 'send-pass-mail-confirm' %}" method="post">
+        {% csrf_token %}
+        <br>
+        <div class="field">
+            <p class="control">
                 <input type="hidden" name="type" value="{{ type }}"/>
-                <button type="submit">Resend Password Reset Email</button>
-            </form>
-            {% endif %}
-        </main>
-    </div>
+                <button class="button is-warning" type="submit">Resend Password Reset Email</button>
+            </p>
+        </div>
+    </form>
+    {% endif %}
 
 {% endblock content %}

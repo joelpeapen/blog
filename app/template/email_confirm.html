@@ -4,36 +4,37 @@
 
 {% block content %}
 
-    <div class="">
-        <main>
-            {% if change %}
-                {% if is_email_confirmed == True %}
-                    <p>Your email has changed</p>
-                {% elif is_email_confirmed == False %}
-                    <p>Your email has not been changed!</p>
-                {% else %}
-                    <p>Check your new email address at {{ email }} for the verification link</p>
-                {% endif %}
+    {% if change %}
+        {% if is_email_confirmed == True %}
+            <p>Your email has changed</p>
+        {% elif is_email_confirmed == False %}
+            <p>Your email has not been changed!</p>
+        {% else %}
+            <p>Check your new email address at {{ email }} for the verification link</p>
+        {% endif %}
+    {% else %}
+        {% if is_email_confirmed == True %}
+            <div>Your email has been confirmed. <a href="{% url "login" %}">Login</a></div>
+        {% else %}
+            {% if new %}
+                <p>Check your email at {{ user.email }} for the verification link</p>
             {% else %}
-                {% if is_email_confirmed == True %}
-                    <div>Your email has been confirmed. <a href="{% url "login" %}">Login</a></div>
-                {% else %}
-                    {% if new %}
-                        <p>Check your email at {{ user.email }} for the verification link</p>
-                    {% else %}
-                        <p>Your email {{ user.email }} has not been confirmed</p>
-                    {% endif %}
-                {% endif %}
+                <p>Your email {{ user.email }} has not been confirmed</p>
             {% endif %}
+        {% endif %}
+    {% endif %}
 
-            {% if is_email_confirmed != True %}
-            <form action="{% url 'send-email-confirm' %}" method="post">
-                {% csrf_token %}
+    {% if is_email_confirmed != True %}
+    <form action="{% url 'send-email-confirm' %}" method="post">
+        {% csrf_token %}
+        <br>
+        <div class="field">
+            <p class="control">
                 <input type="hidden" name="user" value="{{ user.username }}"/>
-                <button type="submit">Resend Confirmation Email</button>
-            </form>
-            {% endif %}
-        </main>
-    </div>
+                <button class="button is-warning" type="submit">Resend Confirmation Email</button>
+            </p>
+        </div>
+    </form>
+    {% endif %}
 
 {% endblock content %}

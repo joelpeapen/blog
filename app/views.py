@@ -20,11 +20,6 @@ class Index(View):
         return render(request, "index.html", {"user": request.user})
 
 
-class About(View):
-    def get(self, request):
-        return render(request, "about.html", {"user": request.user})
-
-
 class Register(View):
     def get(self, request):
         return render(request, "register.html", {"user": request.user})
@@ -162,7 +157,7 @@ class Settings(View):
         if lname != user.last_name:
             user.last_name = lname
 
-        if bio and bio != user.bio:
+        if bio != user.bio:
             user.bio = bio
 
         if pic:

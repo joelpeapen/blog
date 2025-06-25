@@ -4,27 +4,36 @@
 
 {% block content %}
 
-    <div class="">
-        <h3>Register</h3>
+    <div class="container form">
+        <h3 class="title">Register</h3>
         <form method="post">
             {% csrf_token %}
-            <div class="">
-                <label for="username">Username</label>
-                <input id="username" type="text" name="username" maxlength=50 required>
+
+            <div class="field">
+                <label class="label" for="username">Username</label>
+                <div class="control">
+                    <input id="username" class="input" type="text" name="username" maxlength=50 required>
+                </div>
             </div>
 
-            <div class="">
-                <label for="email">Email</label>
-                <input id="email" type="email" name="email" maxlength=50 required>
+            <div class="field">
+                <label class="label" for="email">Email</label>
+                <div class="control">
+                    <input id="email" class="input" type="email" name="email" required>
+                </div>
             </div>
 
-            <div class="">
-                <label for="password">Password</label>
-                <input id="password" type="password" name="password" maxlength=50 required>
+            <div class="field">
+                <label class="label" for="password">Password</label>
+                <p class="control">
+                    <input id="password" class="input" type="password" name="password" maxlength=50 required>
+                </p>
             </div>
 
-            <div class="">
-                <button type="submit" name="submit">Register</button>
+            <div class="field">
+                <p class="control">
+                    <button class="button is-success" type="submit" name="submit">Register</button>
+                </p>
             </div>
         </form>
 

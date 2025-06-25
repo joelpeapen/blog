@@ -1,18 +1,50 @@
-<nav>
-    <a class="" href="/">Home</a>
-    <a class="" href="{% url "about" %}">About</a>
-    {% if user.is_authenticated %}
-    <button id="" class="">
-        <img class="" src="/static{{ user.pic.url }}" alt="profile picture">
-        {{ user.username }}
-    </button>
-    <div id="umenu" class="">
-        <p class="">{{ user.username }}</p>
-        <a href="{% url "user" %}">Profile</a>
-        <a href="{% url "settings" %}">Settings</a>
-        <a href="{% url "logout" %}">Log out</a>
+<nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+            <!-- favicon svg -->
+        </a>
+
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
     </div>
-    {% else %}
-    <a class="" href="{% url "login" %}">Login</a>
-    {% endif %}
+
+    <div id="navbar" class="navbar-menu">
+        <div class="navbar-start">
+            <a class="navbar-item" href="/">Home</a>
+        </div>
+
+        <div class="navbar-end">
+            <div class="navbar-item has-dropdown is-hoverable">
+                {% if user.is_authenticated %}
+                <button id="navuser" class="navbar-link">
+                    <img class="" src="/static{{ user.pic.url }}" alt="profile picture">
+                    {{ user.username }}
+                </button>
+                <div class="navbar-dropdown">
+                    <a class="navbar-item has-icons-left" href="{% url "user" %}">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-user"></i>
+                        </span>Profile
+                    </a>
+                    <a class="navbar-item has-icons-left" href="{% url "settings" %}">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-cog"></i>
+                        </span>Settings
+                    </a>
+                    <a class="navbar-item has-icons-left" href="{% url "logout" %}">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </span>Log out
+                    </a>
+                </div>
+                {% else %}
+                <a class="navbar-link is-arrowless" href="{% url "login" %}">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </nav>

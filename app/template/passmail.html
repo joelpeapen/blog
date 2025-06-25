@@ -4,18 +4,24 @@
 
 {% block content %}
 
-    <div class="">
-        <h3>Recover {{ type }}</h3>
+    <div class="container form">
+        <h3 class="title">Recover {{ type }}</h3>
         <form action="{% url 'send-pass-mail-confirm' %}" method="post">
             {% csrf_token %}
 
-            <div class="">
-                <label for="email">Your email</label>
-                <input type="hidden" name="type" value="{{ type }}"/>
-                <input id="email" type="email" name="email" maxlength=50 required>
+            <div class="field">
+                <label class="label" for="email">Your email</label>
+                <div class="control">
+                    <input type="hidden" name="type" value="{{ type }}"/>
+                    <input id="email" class="input" type="email" name="email" required>
+                </div>
             </div>
 
-            <button type="submit">Submit</button>
+            <div class="field">
+                <p class="control">
+                    <button class="button is-success" type="submit">Submit</button>
+                </p>
+            </div>
         </form>
     </div>
 
