@@ -23,4 +23,6 @@ urlpatterns = [
     path("passreset", views.Passreset.as_view(), name="pass-reset"),
     path("send-pass-mail-confirm/", views.send_pass_mail_confirm, name="send-pass-mail-confirm"),
     path("set-password-confirm/", views.set_password_confirm, name="set-password-confirm"),
+    path("add/", views.Add.as_view(), name="add"),
+    path("<str:username>/post/<int:id>", views.BlogPost.as_view(), name="post"),
 ]

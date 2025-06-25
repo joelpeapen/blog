@@ -6,7 +6,12 @@ from django.contrib.auth.hashers import PBKDF2PasswordHasher
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 
-from app.models import User, EmailConfirmationToken, Notify
+from app.models import (
+    EmailConfirmationToken,
+    Notify,
+    Post,
+    User,
+)
 from app.utils import (
     send_confirmation_email,
     send_password_email,
@@ -368,3 +373,46 @@ def set_password_confirm(request):
         except EmailConfirmationToken.DoesNotExist:
             data = {"is_password_confirmed": False, "type": type}
             return render(request, "pass_confirm.html", data)
+
+
+class Add(View):
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect("/login")
+
+        return render(request, "add.html", {"user": request.user})
+
+    def post(self, request):
+        if not request.user.is_authenticated:
+            return redirect("/login")
+
+        author = request.user
+        title = request.POST.get("title")
+        subtitle = request.POST.get("subtitle")
+        text = request.POST.get("text")
+        date = datetime.utcnow()
+
+        if title and text:
+            post = Post.objects.create(
+                author=author,
+                title=title,
+                subtitle=subtitle,
+                text=text,
+                date=date,
+                updated=date,
+            )
+            post.save()
+            return redirect(f"/post/{post.id}")
+        else:
+            messages.error(request, "You must provide a Title and Content")
+            return redirect(request.META.get("HTTP_REFERER"))
+
+
+class BlogPost(View):
+    def get(self, request, username, id):
+        user = get_object_or_404(User, username=username)
+        post = get_object_or_404(Post, pk=id, author=user)
+        post.views += 1
+        post.save()
+
+        return render(request, "post.html", {"user": request.user, "post": post})

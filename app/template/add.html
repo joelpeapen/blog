@@ -1,0 +1,43 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Login {% endblock title %}
+
+{% block content %}
+
+    <div class="container form wide">
+        <h4 class="title">Add Post</h4>
+        <form action="{% url 'add' %}" method="post">
+            {% csrf_token %}
+
+            <div class="field">
+                <label class="label" for="title">Title*</label>
+                <div class="control">
+                    <input id="title" type="text" name="title" maxlength=150 required>
+                </div>
+                <p id="titlelimit"></p>
+            </div>
+
+            <div class="field">
+                <label class="label" for="subtitle">Subtitle</label>
+                <div class="control">
+                    <textarea id="subtitle" name="subtitle" maxlength=250 rows=4 cols=24></textarea>
+                </div>
+                <p id="sublimit"></p>
+            </div>
+
+            <div class="field">
+                <label class="label" for="text">Content*</label>
+                <div class="control">
+                    <textarea id="text" name="text" rows=4 cols=100></textarea>
+                </div>
+            </div>
+
+            <div class="field">
+                <p class="control">
+                    <button class="button is-success" type="submit" name="submit">Post</button>
+                </p>
+            </div>
+        </form>
+    </div>
+
+{% endblock content %}

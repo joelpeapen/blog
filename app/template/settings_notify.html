@@ -9,7 +9,7 @@
 
         <div class="column">
             <div class="form">
-                <p class="header">Email notifications</p>
+                <p class="subtitle">Email notifications</p>
                 <form action="{% url 'settings-notify' %}?type=comments" method="post">
                     {% csrf_token %}
                     <div class="toggler">

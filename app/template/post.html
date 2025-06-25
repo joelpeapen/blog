@@ -1,0 +1,19 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} {{ post.title }} {% endblock title %}
+
+{% block content %}
+
+    <div class="container">
+        <h1 class="title">{{ post.title }}</h1>
+        <p class="subtitle">{{ post.subtitle }}</p>
+        <a href="{% url 'user' post.author.username %}">{{ post.author.username }}</a>
+        <p>Posted on {{ post.date }}</p>
+        <p>{{ post.views }} views</p>
+
+        <article>
+            {{ post.text }}
+        </article>
+    </div>
+
+{% endblock content %}

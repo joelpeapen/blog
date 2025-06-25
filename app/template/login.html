@@ -12,14 +12,14 @@
             <div class="field">
                 <label class="label" for="username">Username</label>
                 <div class="control">
-                    <input id="username" class="input" type="text" name="username" maxlength=50 required>
+                    <input id="username" type="text" name="username" maxlength=50 required>
                 </div>
             </div>
 
             <div class="field">
                 <label class="label" for="password">Password</label>
                 <p class="control">
-                    <input id="password" class="input" type="password" name="password" maxlength=50 required>
+                    <input id="password" type="password" name="password" maxlength=50 required>
                 </p>
             </div>
 
@@ -40,7 +40,7 @@
                 </p>
             </div>
         </dialog>
-        <div class=""><button class="button is-text is-dark" onclick="popup.showModal()">Need Help?</button></div>
+        <div class=""><button style="text-decoration:underline" onclick="popup.showModal()">Need Help?</button></div>
     </div>
 
 {% endblock content %}

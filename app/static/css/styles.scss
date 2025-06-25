@@ -171,6 +171,11 @@ nav {
   color: $grey-light;
   background-color: $grey-dark !important;
   border-bottom: 3px solid black;
+
+  a[href="/add"] {
+    font-size: 25px;
+    font-weight: bold;
+  }
 }
 
 .navbar-start,
@@ -200,9 +205,20 @@ nav {
   }
 }
 
-.container.form {
-  margin-top: 10% !important;
-  max-width: 30% !important;
+.container {
+  &.form {
+    margin-top: 10% !important;
+    max-width: 30% !important;
+
+    .title {
+      text-align: center;
+    }
+
+    &.wide {
+      margin-top: 2% !important;
+      max-width: 80% !important;
+    }
+  }
 }
 
 .forms {
@@ -217,27 +233,36 @@ nav {
   border: 1px solid $grey;
   background-color: $grey-dark;
 
-  .header {
-    font-weight: 800;
-    margin: 0 0 10px;
-  }
-
   input,
   textarea {
     color: $white;
     background-color: $grey;
+    border: none;
 
     &:focus {
-      border: none;
       outline: 0.08rem solid $blue;
       box-shadow: inset 0 0 0 1px $blue-light;
     }
+  }
+
+  input,
+  textarea,
+  button {
+    width: 100%;
+    padding: 1.5%;
+    border-radius: 6px;
+    box-sizing: border-box;
+    margin: 5px 0 8px;
+  }
+
+  textarea[rows][name="text"] {
+    height: 1000px;
   }
 }
 
 .danger {
   border: 2px solid $red;
-  padding: 10px;
+  padding: 1em;
   border-radius: 6px;
   margin: 10px 0 0 0;
   background: repeating-linear-gradient(45deg,

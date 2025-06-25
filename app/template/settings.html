@@ -9,11 +9,11 @@
 
         <div class="column">
             <div class="form">
+                <h3 class="subtitle">Profile</h3>
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
 
                     <div class="">
-                        <label for="pic">Profile Picture</label>
                         <div class="">
                             <img src="/static{{ user.pic.url }}" alt="profile picture">
                             <div class="file">
@@ -34,29 +34,30 @@
                     <div class="field">
                         <label class="label" for="username">Username</label>
                         <div class="control">
-                            <input id="username" class="input" type="text" name="username" maxlength=50 value="{{ user.username }}" required>
+                            <input id="username" type="text" name="username" maxlength=50 value="{{ user.username }}" required>
                         </div>
                     </div>
 
                     <div class="field">
                         <label class="label" for="fname">First Name</label>
                         <div class="control">
-                            <input id="fname" class="input" type="text" name="fname" maxlength=50 value="{{ user.first_name }}">
+                            <input id="fname" type="text" name="fname" maxlength=50 value="{{ user.first_name }}">
                         </div>
                     </div>
 
                     <div class="field">
                         <label class="label" for="lname">Last Name</label>
                         <div class="control">
-                            <input id="lname" class="input" type="text" name="lname" maxlength=50 value="{{ user.last_name }}">
+                            <input id="lname" type="text" name="lname" maxlength=50 value="{{ user.last_name }}">
                         </div>
                     </div>
 
                     <div class="field">
                         <label class="label" for="bio">Bio</label>
                         <div class="control">
-                            <textarea id="bio" class="textarea" name="bio" placeholder="500 chars" maxlength=500 rows=10 cols=24>{{ user.bio }}</textarea>
+                            <textarea id="bio" name="bio" placeholder="500 chars" maxlength=500 rows=10 cols=24>{{ user.bio }}</textarea>
                         </div>
+                        <p id="biolimit"></p>
                     </div>
 
                     <div class="field">

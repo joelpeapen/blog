@@ -17,7 +17,7 @@
                         <div class="field">
                             <label class="label" for="email">New Email</label>
                             <div class="control">
-                                <input id="email" class="input" type="email" name="email" maxlength=50 placeholder="{{ user.email }}" required>
+                                <input id="email" type="email" name="email" maxlength=254 placeholder="{{ user.email }}" required>
                             </div>
                         </div>
 
@@ -35,23 +35,23 @@
                         {% csrf_token %}
 
                         <div class="field">
-                            <label class="label" for="old-password">Old Password</label>
+                            <label class="label" for="old-password">Old Password*</label>
                             <p class="control">
-                                <input id="old-password" class="input" type="password" name="old-password" maxlength=50 required>
+                                <input id="old-password" type="password" name="old-password" required>
                             </p>
                         </div>
 
                         <div class="field">
-                            <label class="label" for="password">New Password</label>
+                            <label class="label" for="password">New Password*</label>
                             <p class="control">
-                                <input id="password" class="input" type="password" name="password" maxlength=50 required>
+                                <input id="password" type="password" name="password" required>
                             </p>
                         </div>
 
                         <div class="field">
-                            <label class="label" for="confirm-pw">Confirm New Password</label>
+                            <label class="label" for="confirm-pw">Confirm New Password*</label>
                             <p class="control">
-                                <input id="confirm-pw" class="input" type="password" name="confirm-pw" maxlength=50 required>
+                                <input id="confirm-pw" type="password" name="confirm-pw" required>
                             </p>
                         </div>
 

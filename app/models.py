@@ -2,6 +2,8 @@ from uuid import uuid4
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+# comment tags
+
 
 class User(AbstractUser):
     email = models.EmailField(max_length=254)
@@ -11,6 +13,23 @@ class User(AbstractUser):
         upload_to="images/profiles/", default="images/profiles/default.png"
     )
     bio = models.TextField()
+
+    def __str__(self):
+        return self.username
+
+
+class Post(models.Model):
+    title = models.CharField(max_length=150)
+    subtitle = models.CharField(max_length=250)
+    text = models.TextField()
+    author = models.ForeignKey("User", on_delete=models.CASCADE)
+    likes = models.IntegerField(default=0)
+    views = models.IntegerField(default=1)
+    date = models.DateTimeField()
+    updated = models.DateTimeField()
+
+    def __str__(self):
+        return self.title
 
 
 class EmailConfirmationToken(models.Model):

@@ -138,6 +138,10 @@ nav {
   background-color: #262626 !important;
   border-bottom: 3px solid black;
 }
+nav a[href="/add"] {
+  font-size: 25px;
+  font-weight: bold;
+}
 
 .navbar-start,
 .navbar-end {
@@ -165,6 +169,13 @@ nav {
   margin-top: 10% !important;
   max-width: 30% !important;
 }
+.container.form .title {
+  text-align: center;
+}
+.container.form.wide {
+  margin-top: 2% !important;
+  max-width: 80% !important;
+}
 
 .forms {
   display: flex;
@@ -178,25 +189,33 @@ nav {
   border: 1px solid #3d444d;
   background-color: #262626;
 }
-.form .header {
-  font-weight: 800;
-  margin: 0 0 10px;
-}
 .form input,
 .form textarea {
   color: #ffffff;
   background-color: #3d444d;
+  border: none;
 }
 .form input:focus,
 .form textarea:focus {
-  border: none;
   outline: 0.08rem solid #54a4dc;
   box-shadow: inset 0 0 0 1px #1f6feb;
+}
+.form input,
+.form textarea,
+.form button {
+  width: 100%;
+  padding: 1.5%;
+  border-radius: 6px;
+  box-sizing: border-box;
+  margin: 5px 0 8px;
+}
+.form textarea[rows][name=text] {
+  height: 1000px;
 }
 
 .danger {
   border: 2px solid #ff4343;
-  padding: 10px;
+  padding: 1em;
   border-radius: 6px;
   margin: 10px 0 0 0;
   background: repeating-linear-gradient(45deg, rgba(255, 67, 67, 0.2), rgba(255, 67, 67, 0.2) 10px, rgba(4, 18, 27, 0.2) 10px, rgba(4, 18, 27, 0.2) 20px);
