@@ -195,14 +195,12 @@ nav {
   }
 }
 
-#navuser {
-  img {
-    border-radius: 50% !important;
-  }
+.circlepic {
+  border-radius: 50% !important;
+}
 
-  &:hover {
-    background-color: $grey-dark !important;
-  }
+#navuser:hover {
+  background-color: $grey-dark !important;
 }
 
 .container {
@@ -219,6 +217,16 @@ nav {
       max-width: 80% !important;
     }
   }
+}
+
+
+#pic {
+  max-width: 16em;
+}
+
+#ppic {
+  max-width: 25%;
+  margin: 0 0 10px 0;
 }
 
 .forms {
@@ -256,7 +264,7 @@ nav {
   }
 
   textarea[rows][name="text"] {
-    height: 1000px;
+    height: 250px;
   }
 }
 
@@ -313,5 +321,106 @@ nav {
     &:before {
       transform: translateX(26px);
     }
+  }
+}
+
+.post {
+  max-width: 60%;
+  overflow-wrap: break-word;
+  width: 728px;
+  margin: 0 auto !important;
+
+  .subtitle {
+    font-style: italic;
+    margin: 10px 0;
+  }
+
+  & {
+    width: 100%;
+  }
+}
+
+.author {
+  display: flex;
+  gap: 1em;
+  margin: 20px 0 0 0;
+
+  img {
+    max-width: 50px;
+  }
+
+  div:not(.profile) {
+    display: flex;
+    flex-direction: column;
+
+    p {
+      font-size: 13px;
+    }
+  }
+
+}
+
+.meta {
+  display: flex;
+  justify-content: flex-start;
+  position: relative;
+  gap: 10px;
+  padding: 15px 0;
+  margin: 20px 0 0 0;
+  border-top: 1px solid $grey;
+  border-bottom: 1px solid $grey;
+}
+
+.pill {
+  display: inline-block;
+  border-radius: 20px;
+  border: 1px solid $grey;
+  padding: 0.5em;
+  background-color: $grey-dark;
+}
+
+.pill#share {
+  margin-left: auto;
+  cursor: pointer;
+
+  #copied {
+    @include floater(23%, 10%);
+    display: none;
+
+    color: $white;
+    background-color: $grey;
+    font-size: 15px;
+    text-align: center;
+    z-index: 1000;
+  }
+}
+
+article {
+  margin: 50px 0;
+  font-size: 20px;
+  font-family: Helvetica;
+}
+
+@media (max-width: 1000px) {
+  .container {
+    &.form {
+      margin-top: 15% !important;
+      max-width: 50% !important;
+    }
+  }
+}
+
+@media (max-width: 650px) {
+  .container {
+    &.form {
+      margin-top: 25% !important;
+      max-width: 70% !important;
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .post {
+    max-width: 85%;
   }
 }

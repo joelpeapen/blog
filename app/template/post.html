@@ -4,12 +4,36 @@
 
 {% block content %}
 
-    <div class="container">
-        <h1 class="title">{{ post.title }}</h1>
-        <p class="subtitle">{{ post.subtitle }}</p>
-        <a href="{% url 'user' post.author.username %}">{{ post.author.username }}</a>
-        <p>Posted on {{ post.date }}</p>
-        <p>{{ post.views }} views</p>
+    <div class="post">
+        <div class="heading">
+            <h1 class="title">{{ post.title }}</h1>
+            <p class="subtitle">{{ post.subtitle }}</p>
+        </div>
+        <div class="author">
+            <div class="profile">
+                <img class="circlepic" src="/static{{ user.pic.url }}" alt="profile picture">
+            </div>
+            <div>
+                <a href="{% url 'user' post.author.username %}">{{ post.author.username }}</a>
+                <p>{{ post.date }}</p>
+            </div>
+        </div>
+        <div class="meta">
+            <!-- TODO: comments count -->
+            <div class="pill">
+                <!-- <span class="icon is-small"><i class="fas fa-eye"></i></span> -->
+                <p>{{ post.views }} views</p>
+            </div>
+            <div class="pill">
+                <!-- <span class="icon is-small"><i class="fas fa-heart"></i></span> -->
+                <p>{{ post.likes }} likes</p>
+            </div>
+            <div id="share" class="pill">
+                <!-- <span class="icon is-small"><i class="fas fa-share"></i></span> -->
+                <p>Share</p>
+                <span id="copied" class="pill">Copied</span>
+            </div>
+        </div>
 
         <article>
             {{ post.text }}

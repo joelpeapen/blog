@@ -22,7 +22,7 @@
             <div class="navbar-item has-dropdown is-hoverable">
                 {% if user.is_authenticated %}
                 <button id="navuser" class="navbar-link">
-                    <img class="" src="/static{{ user.pic.url }}" alt="profile picture">
+                    <img class="circlepic" src="/static{{ user.pic.url }}" alt="profile picture">
                     {{ user.username }}
                 </button>
                 <div class="navbar-dropdown">

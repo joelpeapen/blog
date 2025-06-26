@@ -24,6 +24,8 @@ document.addEventListener("DOMContentLoaded", function() {
     charLimit("subtitle", "sublimit")
     charLimit("bio", "biolimit")
 
+    copyURL("share", "copied")
+
 });
 
 function charLimit(input, limit) {
@@ -49,5 +51,24 @@ function charLimit(input, limit) {
                 left.style.display = "block";
             }
         }
+    }
+}
+
+function copyURL(button, popup) {
+    const b = document.getElementById(button)
+    const pop = document.getElementById(popup)
+    if (b && pop) {
+        b.addEventListener('click', function() {
+            navigator.clipboard.writeText(window.location.href).then(function() {
+                pop.style.display = "block";
+
+                setTimeout(function() {
+                    pop.style.display = "none";
+                }, 2000);
+
+            }).catch(function(error) {
+                console.error("Error copying text: ", error);
+            });
+        });
     }
 }
