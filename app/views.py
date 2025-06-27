@@ -3,6 +3,7 @@ from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.hashers import PBKDF2PasswordHasher
+from django.db.models import ManyToManyField
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 
@@ -472,6 +473,25 @@ class Delete(View):
 
         post.delete()
         return redirect("/user")
+
+
+class Like(View):
+    def post(self, request, id):
+        post = get_object_or_404(Post, pk=id)
+
+        if not request.user.is_authenticated:
+            return redirect(f"/{post.author.username}/post/{id}")
+
+        if request.user.likes.filter(pk=id).exists():
+            post.likes -= 1
+            request.user.likes.remove(post)
+            post.save()
+        else:
+            post.likes += 1
+            request.user.likes.add(post)
+            post.save()
+
+        return redirect(f"/{post.author.username}/post/{id}")
 
 
 class BlogPost(View):

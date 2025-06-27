@@ -38,11 +38,18 @@
             </div>
             <div class="pill">
                 <!-- <span class="icon is-small"><i class="fas fa-heart"></i></span> -->
+                {% if user.is_authenticated %}
+                <form id="like" action="{% url 'like' post.id %}" method="post">
+                    {% csrf_token %}
+                    <a onClick="this.closest('form').submit()" >{{ post.likes }} {% if post.likes == 0 or post.likes > 1 %}likes{% else %}like{% endif %}</a>
+                </form>
+                {% else %}
                 <p>{{ post.likes }} likes</p>
+                {% endif %}
             </div>
             <div id="share" class="pill far-right">
                 <!-- <span class="icon is-small"><i class="fas fa-share"></i></span> -->
-                <p>Share</p>
+                <a>Share</a>
                 <span id="copied" class="pill">Copied</span>
             </div>
         </div>
