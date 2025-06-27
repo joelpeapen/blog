@@ -8,14 +8,26 @@
         <div class="heading">
             <h1 class="title">{{ post.title }}</h1>
             <p class="subtitle">{{ post.subtitle }}</p>
+
+            {% if user.is_authenticated and user == post.author %}
+            <div id="postaction">
+                <div class="pill circle edit">
+                    <a href="{% url 'edit' post.id %}">Edit</a>
+                </div>
+                <div class="pill circle del">
+                    <a class="confirm" href="{% url 'delete' post.id %}">Del</a>
+                </div>
+            </div>
+            {% endif %}
         </div>
         <div class="author">
             <div class="profile">
-                <img class="circlepic" src="/static{{ user.pic.url }}" alt="profile picture">
+                <img class="circlepic" src="/static{{ post.author.pic.url }}" alt="profile picture">
             </div>
             <div>
                 <a href="{% url 'user' post.author.username %}">{{ post.author.username }}</a>
                 <p>{{ post.date }}</p>
+                <p>Last updated on {{ post.updated }}</p>
             </div>
         </div>
         <div class="meta">
@@ -28,12 +40,19 @@
                 <!-- <span class="icon is-small"><i class="fas fa-heart"></i></span> -->
                 <p>{{ post.likes }} likes</p>
             </div>
-            <div id="share" class="pill">
+            <div id="share" class="pill far-right">
                 <!-- <span class="icon is-small"><i class="fas fa-share"></i></span> -->
                 <p>Share</p>
                 <span id="copied" class="pill">Copied</span>
             </div>
         </div>
+
+        {% if not nosplash %}
+        <figure class="splash">
+            <img src="/static{{ post.splash.url }}" alt="{{ post.splashdesc }}">
+            {% if post.splashdesc %}<figcaption>{{ post.splashdesc }}</figcaption>{% endif %}
+        </figure>
+        {% endif %}
 
         <article>
             {{ post.text }}

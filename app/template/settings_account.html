@@ -65,7 +65,7 @@
                 <div class="danger">
                     <form action="{% url "delete-user" %}" method="post">
                         {% csrf_token %}
-                        <button class="button is-danger is-dark" id="delete-user" type="submit" name=submit>Delete Account</button>
+                        <button class="button is-danger is-dark confirm" id="delete-user" type="submit" name=submit>Delete Account</button>
                     </form>
                 </div>
             </div>

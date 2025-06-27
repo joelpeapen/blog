@@ -1,18 +1,18 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Add Post {% endblock title %}
+{% block title %} Edit Post {% endblock title %}
 
 {% block content %}
 
     <div class="container form wide">
-        <h4 class="title">Add Post</h4>
-        <form action="{% url 'add' %}" method="post" enctype="multipart/form-data">
+        <h4 class="title">Edit Post</h4>
+        <form action="{% url 'edit' post.id %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
 
             <div class="field">
                 <label class="label" for="title">Title*</label>
                 <div class="control">
-                    <input id="title" type="text" name="title" maxlength=150 required>
+                    <input id="title" type="text" name="title" maxlength=150 required value="{{ post.title }}">
                 </div>
                 <p id="titlelimit"></p>
             </div>
@@ -20,7 +20,7 @@
             <div class="field">
                 <label class="label" for="subtitle">Subtitle</label>
                 <div class="control">
-                    <textarea id="subtitle" name="subtitle" maxlength=250 rows=4 cols=24></textarea>
+                    <textarea id="subtitle" name="subtitle" maxlength=250 rows=4 cols=24>{{ post.subtitle }}</textarea>
                 </div>
                 <p id="sublimit"></p>
             </div>
@@ -28,13 +28,18 @@
             <!-- TODO: make desc required if image is uploaded -->
             <div class="field">
                 <label class="label" for="splash">Image</label>
+                <img src="{% if not nosplash %}/static{{ post.splash.url }}{% endif %}" alt="{{ post.splashesc }}">
                 <input id="splash" name="splash" type="file" accept="image/*">
+                {% if not nosplash %}
+                <label style="display: inline !important" class="label" for="delete-splash">Delete Image</label>
+                <input style="display: inline !important" id="delete-splash" type="checkbox" name="delete-splash">
+                {% endif %}
             </div>
 
             <div class="field">
                 <label class="label" for="splashdesc">Image Description</label>
                 <div class="control">
-                    <textarea id="splashdesc" name="splashdesc" maxlength=150 rows=4 cols=24></textarea>
+                    <textarea id="splashdesc" name="splashdesc" maxlength=150 rows=4 cols=24>{{ post.splashdesc }}</textarea>
                 </div>
                 <p id="splashlimit"></p>
             </div>
@@ -42,13 +47,13 @@
             <div class="field">
                 <label class="label" for="text">Content*</label>
                 <div class="control">
-                    <textarea id="text" name="text" rows=4 cols=100></textarea>
+                    <textarea id="text" name="text" rows=4 cols=100>{{ post.text }}</textarea>
                 </div>
             </div>
 
             <div class="field">
                 <p class="control">
-                    <button class="button is-success" type="submit" name="submit">Post</button>
+                    <button class="button is-success" type="submit" name="submit">Save</button>
                 </p>
             </div>
         </form>

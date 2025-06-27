@@ -27,6 +27,10 @@ class Post(models.Model):
     views = models.IntegerField(default=1)
     date = models.DateTimeField()
     updated = models.DateTimeField()
+    splash = models.ImageField(
+        upload_to="images/splashes/", default="images/splashes/default.png"
+    )
+    splashdesc = models.CharField(max_length=150)
 
     def __str__(self):
         return self.title

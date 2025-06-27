@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
         const msgs = document.getElementsByClassName("messages");
         for (let i = 0; i < msgs.length; i++) {
@@ -19,13 +19,21 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
+    const links = document.querySelectorAll(".confirm");
+    links.forEach(link => {
+        link.addEventListener("click", (event) => {
+            const confirmed = confirm("Are you sure?");
+            if (!confirmed) {
+                event.preventDefault();
+            }
+        });
+    });
 
     charLimit("title", "titlelimit")
     charLimit("subtitle", "sublimit")
-    charLimit("bio", "biolimit")
+    charLimit("splashdesc", "splashlimit")
 
     copyURL("share", "copied")
-
 });
 
 function charLimit(input, limit) {
@@ -58,15 +66,15 @@ function copyURL(button, popup) {
     const b = document.getElementById(button)
     const pop = document.getElementById(popup)
     if (b && pop) {
-        b.addEventListener('click', function() {
-            navigator.clipboard.writeText(window.location.href).then(function() {
+        b.addEventListener('click', () => {
+            navigator.clipboard.writeText(window.location.href).then(() => {
                 pop.style.display = "block";
 
-                setTimeout(function() {
+                setTimeout(() => {
                     pop.style.display = "none";
                 }, 2000);
 
-            }).catch(function(error) {
+            }).catch((error) => {
                 console.error("Error copying text: ", error);
             });
         });

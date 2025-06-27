@@ -9,7 +9,7 @@
         <form action="{% url 'set-password-confirm' %}" method="post">
             {% csrf_token %}
 
-            <input type="hidden" name="token" value="{{ token_id }}"/>
+            <input type="hidden" name="token" value="{{ token_id }}">
 
             <div class="field">
                 <label class="label" for="password">Password</label>

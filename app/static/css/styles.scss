@@ -188,11 +188,29 @@ nav {
   }
 }
 
+.navbar-item {
+  img {
+    max-height: 40px !important;
+  }
+}
+
 .has-dropdown {
   a {
     font-size: 18px;
     text-decoration: none;
+
+    &:hover {
+      text-decoration: none;
+    }
   }
+}
+
+.far-left {
+  margin-right: auto;
+}
+
+.far-right {
+  margin-left: auto;
 }
 
 .circlepic {
@@ -219,8 +237,8 @@ nav {
   }
 }
 
-
-#pic {
+#pic,
+#splash {
   max-width: 16em;
 }
 
@@ -330,9 +348,13 @@ nav {
   width: 728px;
   margin: 0 auto !important;
 
+  .heading {
+    position: relative;
+  }
+
   .subtitle {
-    font-style: italic;
     margin: 10px 0;
+    font-style: italic;
   }
 
   & {
@@ -345,8 +367,13 @@ nav {
   gap: 1em;
   margin: 20px 0 0 0;
 
-  img {
-    max-width: 50px;
+  .profile {
+    display: flex;
+    align-items: center;
+
+    img {
+      max-width: 50px;
+    }
   }
 
   div:not(.profile) {
@@ -366,7 +393,7 @@ nav {
   position: relative;
   gap: 10px;
   padding: 15px 0;
-  margin: 20px 0 0 0;
+  margin: 20px 0 20px 0;
   border-top: 1px solid $grey;
   border-bottom: 1px solid $grey;
 }
@@ -377,11 +404,35 @@ nav {
   border: 1px solid $grey;
   padding: 0.5em;
   background-color: $grey-dark;
+
+  &:hover {
+    background-color: $grey-darker !important;
+  }
+
+  a {
+    color: $grey-light;
+  }
+
+  &.circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 40px;
+    height: 40px;
+    border-radius: 50% !important;
+    padding: 0;
+  }
+}
+
+.pill#like,
+.pill#share {
+  cursor: pointer;
 }
 
 .pill#share {
-  margin-left: auto;
   cursor: pointer;
+  background-color: $grey;
 
   #copied {
     @include floater(23%, 10%);
@@ -395,10 +446,100 @@ nav {
   }
 }
 
+#postaction {
+  @include floater(0%, -2%);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  width: 60px;
+}
+
+.edit {
+  border: 2px solid $green;
+
+  a {
+    color: $green !important;
+  }
+}
+
+.del {
+  border: 2px solid $red;
+
+  a {
+    color: $red !important;
+  }
+}
+
+.splash {
+  text-align: center;
+
+  img {
+    margin: auto;
+  }
+
+  figcaption {
+    font-weight: 300;
+    font-style: italic;
+    margin: 10px 0 0 0;
+  }
+}
+
 article {
   margin: 50px 0;
   font-size: 20px;
   font-family: Helvetica;
+}
+
+.posts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.postcard {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  max-width: 20em;
+  border-radius: 1rem;
+  border: 3px solid $grey;
+
+  &:hover {
+    box-shadow: 2px 2px 2px $grey-light;
+  }
+
+  .heading {
+    padding: 0 5px;
+  }
+
+  .title {
+    font-size: 20px !important;
+  }
+
+  .subtitle {
+    font-size: 18px !important;
+  }
+
+  &>img {
+    max-height: 200px;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    margin: 0 0 20px 0 !important;
+  }
+
+  .profile img {
+    display: inline-block;
+    max-height: 30px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .post {
+    max-width: 85%;
+  }
 }
 
 @media (max-width: 1000px) {
@@ -407,6 +548,10 @@ article {
       margin-top: 15% !important;
       max-width: 50% !important;
     }
+  }
+
+  #postaction {
+    @include floater(100%, 0%);
   }
 }
 
@@ -417,10 +562,20 @@ article {
       max-width: 70% !important;
     }
   }
+
+  .title {
+    font-size: 1.5rem;
+  }
 }
 
-@media (max-width: 1200px) {
-  .post {
-    max-width: 85%;
+@media (max-width: 480px) {
+  #postaction {
+    @include floater(100%, -10%);
+  }
+}
+
+@media (max-width: 400px) {
+  #postaction {
+    @include floater(0%, -10%);
   }
 }
