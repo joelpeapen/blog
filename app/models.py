@@ -13,6 +13,7 @@ class User(AbstractUser):
         upload_to="images/profiles/", default="images/profiles/default.png"
     )
     bio = models.TextField()
+    likes = models.ManyToManyField("Post", related_name="liked_posts")
 
     def __str__(self):
         return self.username
