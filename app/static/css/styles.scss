@@ -178,6 +178,7 @@ nav {
   }
 }
 
+.navbar-brand,
 .navbar-start,
 .navbar-end {
   font-size: 20px;
@@ -192,7 +193,19 @@ nav {
   a {
     font-size: 18px;
     text-decoration: none;
+
+    &:hover {
+      text-decoration: none;
+    }
   }
+}
+
+.far-left {
+  margin-right: auto;
+}
+
+.far-right {
+  margin-left: auto;
 }
 
 .circlepic {
@@ -219,8 +232,8 @@ nav {
   }
 }
 
-
-#pic {
+#pic,
+#splash {
   max-width: 16em;
 }
 
@@ -330,6 +343,10 @@ nav {
   width: 728px;
   margin: 0 auto !important;
 
+  .heading {
+    position: relative;
+  }
+
   .subtitle {
     font-style: italic;
     margin: 10px 0;
@@ -345,8 +362,13 @@ nav {
   gap: 1em;
   margin: 20px 0 0 0;
 
-  img {
-    max-width: 50px;
+  .profile {
+    display: flex;
+    align-items: center;
+
+    img {
+      max-width: 50px;
+    }
   }
 
   div:not(.profile) {
@@ -366,7 +388,7 @@ nav {
   position: relative;
   gap: 10px;
   padding: 15px 0;
-  margin: 20px 0 0 0;
+  margin: 20px 0 20px 0;
   border-top: 1px solid $grey;
   border-bottom: 1px solid $grey;
 }
@@ -377,11 +399,34 @@ nav {
   border: 1px solid $grey;
   padding: 0.5em;
   background-color: $grey-dark;
+
+  &:hover {
+    background-color: $grey-darker !important;
+  }
+
+  a {
+    color: $grey-light;
+  }
+
+  &.circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 40px;
+    height: 40px;
+    border-radius: 50% !important;
+    padding: 0;
+  }
+}
+
+.pill#like, .pill#share {
+  cursor: pointer;
 }
 
 .pill#share {
-  margin-left: auto;
   cursor: pointer;
+  background-color: $grey;
 
   #copied {
     @include floater(23%, 10%);
@@ -392,6 +437,47 @@ nav {
     font-size: 15px;
     text-align: center;
     z-index: 1000;
+  }
+}
+
+#postaction {
+  @include floater(0%, -2%);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  width: 60px;
+}
+
+.edit {
+  border: 2px solid $green;
+
+  a {
+    color: $green !important;
+  }
+}
+
+.del {
+  border: 2px solid $red;
+
+  a {
+    color: $red !important;
+  }
+}
+
+.splash {
+  text-align: center;
+
+  img {
+    margin: auto;
+  }
+
+  figcaption {
+    font-weight: 300;
+    font-style: italic;
+    margin: 10px 0 0 0;
   }
 }
 

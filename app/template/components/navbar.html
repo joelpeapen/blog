@@ -1,7 +1,8 @@
+{% load static %}
 <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
         <a class="navbar-item" href="/">
-            <!-- favicon svg -->
+            <img src="{% static 'favicon.ico' %}">
         </a>
 
         <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar">
@@ -13,10 +14,6 @@
     </div>
 
     <div id="navbar" class="navbar-menu">
-        <div class="navbar-start">
-            <a class="navbar-item" href="/">Home</a>
-        </div>
-
         <div class="navbar-end">
             <a class="navbar-item is-arrowless" href="/add">＋</a>
             <div class="navbar-item has-dropdown is-hoverable">

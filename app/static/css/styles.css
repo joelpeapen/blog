@@ -143,10 +143,12 @@ nav a[href="/add"] {
   font-weight: bold;
 }
 
+.navbar-brand,
 .navbar-start,
 .navbar-end {
   font-size: 20px;
 }
+.navbar-brand a:hover,
 .navbar-start a:hover,
 .navbar-end a:hover {
   text-decoration: underline;
@@ -156,6 +158,17 @@ nav a[href="/add"] {
 .has-dropdown a {
   font-size: 18px;
   text-decoration: none;
+}
+.has-dropdown a:hover {
+  text-decoration: none;
+}
+
+.far-left {
+  margin-right: auto;
+}
+
+.far-right {
+  margin-left: auto;
 }
 
 .circlepic {
@@ -178,7 +191,8 @@ nav a[href="/add"] {
   max-width: 80% !important;
 }
 
-#pic {
+#pic,
+#splash {
   max-width: 16em;
 }
 
@@ -276,6 +290,9 @@ nav a[href="/add"] {
   width: 728px;
   margin: 0 auto !important;
 }
+.post .heading {
+  position: relative;
+}
 .post .subtitle {
   font-style: italic;
   margin: 10px 0;
@@ -289,7 +306,11 @@ nav a[href="/add"] {
   gap: 1em;
   margin: 20px 0 0 0;
 }
-.author img {
+.author .profile {
+  display: flex;
+  align-items: center;
+}
+.author .profile img {
   max-width: 50px;
 }
 .author div:not(.profile) {
@@ -306,7 +327,7 @@ nav a[href="/add"] {
   position: relative;
   gap: 10px;
   padding: 15px 0;
-  margin: 20px 0 0 0;
+  margin: 20px 0 20px 0;
   border-top: 1px solid #3d444d;
   border-bottom: 1px solid #3d444d;
 }
@@ -318,10 +339,29 @@ nav a[href="/add"] {
   padding: 0.5em;
   background-color: #262626;
 }
+.pill:hover {
+  background-color: #181818 !important;
+}
+.pill a {
+  color: #9198a1;
+}
+.pill.circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50% !important;
+  padding: 0;
+}
+
+.pill#like, .pill#share {
+  cursor: pointer;
+}
 
 .pill#share {
-  margin-left: auto;
   cursor: pointer;
+  background-color: #3d444d;
 }
 .pill#share #copied {
   top: 23%;
@@ -335,6 +375,46 @@ nav a[href="/add"] {
   font-size: 15px;
   text-align: center;
   z-index: 1000;
+}
+
+#postaction {
+  top: 0%;
+  margin-right: -2%;
+  position: absolute;
+  left: auto !important;
+  right: 0 !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  width: 60px;
+}
+
+.edit {
+  border: 2px solid #4cca51;
+}
+.edit a {
+  color: #4cca51 !important;
+}
+
+.del {
+  border: 2px solid #ff4343;
+}
+.del a {
+  color: #ff4343 !important;
+}
+
+.splash {
+  text-align: center;
+}
+.splash img {
+  margin: auto;
+}
+.splash figcaption {
+  font-weight: 300;
+  font-style: italic;
+  margin: 10px 0 0 0;
 }
 
 article {

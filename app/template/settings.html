@@ -13,11 +13,9 @@
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
 
-                    <div class="">
-                        <div class="">
-                            <img id="ppic" src="/static{{ user.pic.url }}" alt="profile picture">
-                            <input id="pic" name="pic" type="file" accept="image/*">
-                        </div>
+                    <div class="field">
+                        <img id="ppic" src="/static{{ user.pic.url }}" alt="profile picture">
+                        <input id="pic" name="pic" type="file" accept="image/*">
                     </div>
 
 
@@ -45,7 +43,7 @@
                     <div class="field">
                         <label class="label" for="bio">Bio</label>
                         <div class="control">
-                            <textarea id="bio" name="bio" placeholder="500 chars" maxlength=500 rows=10 cols=24>{{ user.bio }}</textarea>
+                            <textarea id="bio" name="bio" rows=10 cols=24>{{ user.bio }}</textarea>
                         </div>
                         <p id="biolimit"></p>
                     </div>

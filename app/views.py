@@ -391,6 +391,8 @@ class Add(View):
         subtitle = request.POST.get("subtitle")
         text = request.POST.get("text")
         date = datetime.utcnow()
+        splash = request.FILES.get("splash")
+        splashdesc = request.POST.get("splashdesc")
 
         if title and text:
             post = Post.objects.create(
@@ -400,19 +402,95 @@ class Add(View):
                 text=text,
                 date=date,
                 updated=date,
+                splash=splash,
+                splashdesc=splashdesc,
             )
             post.save()
-            return redirect(f"/post/{post.id}")
+            return redirect(f"/{post.author}/post/{post.id}")
         else:
             messages.error(request, "You must provide a Title and Content")
             return redirect(request.META.get("HTTP_REFERER"))
 
 
+class Edit(View):
+    def get(self, request, id):
+        post = get_object_or_404(Post, pk=id)
+
+        if not request.user.is_authenticated or request.user != post.author:
+            return redirect(f"/{post.author.username}/post/{id}")
+
+        nosplash = False
+        if not post.splash:
+            nosplash = True
+
+        return render(
+            request,
+            "edit.html",
+            {"user": request.user, "post": post, "nosplash": nosplash},
+        )
+
+    def post(self, request, id):
+        post = get_object_or_404(Post, pk=id)
+
+        if not request.user.is_authenticated or request.user != post.author:
+            return redirect(f"/{post.author.username}/post/{id}")
+
+        title = request.POST.get("title")
+        subtitle = request.POST.get("subtitle")
+        text = request.POST.get("text")
+        splash = request.FILES.get("splash")
+        splashdesc = request.POST.get("splashdesc")
+
+        if title != post.title:
+            post.title = title
+
+        if subtitle != post.subtitle:
+            post.subtitle = subtitle
+
+        if text != post.text:
+            post.text = text
+
+        if splash:
+            post.splash = splash
+
+        if splashdesc != post.splashdesc:
+            post.splashdesc = splashdesc
+
+        post.updated = datetime.utcnow()
+
+        post.save()
+        messages.success(request, "Post Updated")
+        return redirect(f"/{post.author.username}/post/{id}")
+
+
+class Delete(View):
+    def get(self, request, id):
+        post = get_object_or_404(Post, pk=id)
+
+        if not request.user.is_authenticated or request.user != post.author:
+            return redirect(f"/{post.author.username}/post/{id}")
+
+        post.delete()
+        return redirect("/user")
+
+
 class BlogPost(View):
     def get(self, request, username, id):
-        user = get_object_or_404(User, username=username)
-        post = get_object_or_404(Post, pk=id, author=user)
+        author = get_object_or_404(User, username=username)
+        post = get_object_or_404(Post, pk=id, author=author)
+
+        nosplash = False
+        if post.splash:
+            if "default.png" in post.splash.url:
+                nosplash = True
+        else:
+            nosplash = True
+
         post.views += 1
         post.save()
 
-        return render(request, "post.html", {"user": request.user, "post": post})
+        return render(
+            request,
+            "post.html",
+            {"user": request.user, "post": post, "nosplash": nosplash},
+        )
