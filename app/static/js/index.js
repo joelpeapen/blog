@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
         for (let i = 0; i < msgs.length; i++) {
             msgs[i].style.display = "none";
         }
-    }, 3000);
+    }, 5000);
 
 
     const navbarBurgers = document.querySelectorAll('.navbar-burger');

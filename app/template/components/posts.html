@@ -1,0 +1,31 @@
+<div class="container posts">
+    {% for p in posts %}
+    <div class="card">
+        <div class="card-image">
+            <a href="{%  url 'post' p.author.username p.id %}">
+                <figure class="image">
+                    <img src="{% if p.splash %}/static{{ p.splash.url }}{% endif %}" alt="{{ p.splashdesc }}">
+                </figure>
+            </a>
+        </div>
+        <div class="card-content">
+            <div class="content">
+                <p class="title is-4">{{ p.title }}</p>
+                <p class="subtitle">{{ p.subtitle }}</p>
+            </div>
+
+            <div class="media">
+                <div class="media-left">
+                    <figure class="image is-48x48">
+                        <img class="circlepic" src="/static{{ p.author.pic.url }}" alt="profile picture">
+                    </figure>
+                </div>
+                <div class="media-content">
+                    <a href="{% url 'user' p.author.username %}">{{ p.author.username }}</a>
+                    {{ p.date }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>

@@ -105,19 +105,26 @@ class appUser(View):
         if username:
             profile = get_object_or_404(User, username=username)
 
-            data = {
-                "profile": profile,
-                "user": request.user,
-            }
-
-            return render(request, "user.html", data)
+            return render(
+                request,
+                "user.html",
+                {
+                    "profile": profile,
+                    "user": request.user,
+                    "posts": Post.objects.filter(author=profile),
+                },
+            )
 
         # /user/ -> logged-in user's page
         if request.user.is_authenticated:
             return render(
                 request,
                 "user.html",
-                {"profile": request.user, "user": request.user},
+                {
+                    "profile": request.user,
+                    "user": request.user,
+                    "posts": Post.objects.filter(author=request.user),
+                },
             )
         return redirect("/login")
 
@@ -441,6 +448,7 @@ class Edit(View):
         text = request.POST.get("text")
         splash = request.FILES.get("splash")
         splashdesc = request.POST.get("splashdesc")
+        delete = request.POST.get("delete-splash")
 
         if title != post.title:
             post.title = title
@@ -451,7 +459,10 @@ class Edit(View):
         if text != post.text:
             post.text = text
 
-        if splash:
+        if delete:
+            post.splash = None
+            post.splashdesc = None
+        elif splash:
             post.splash = splash
 
         if splashdesc != post.splashdesc:
@@ -514,3 +525,9 @@ class BlogPost(View):
             "post.html",
             {"user": request.user, "post": post, "nosplash": nosplash},
         )
+
+
+class Posts(View):
+    def get(self, request):
+        posts = Post.objects.all().order_by("-views")
+        return render(request, "posts.html", {"user": request.user, "posts": posts})

@@ -426,6 +426,17 @@ article {
   font-family: Helvetica;
 }
 
+.posts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 1200px) {
+  .post {
+    max-width: 85%;
+  }
+}
 @media (max-width: 1000px) {
   .container.form {
     margin-top: 15% !important;

@@ -499,43 +499,6 @@ article {
   gap: 20px;
 }
 
-.postcard {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  max-width: 20em;
-  border-radius: 1rem;
-  border: 3px solid $grey;
-
-  &:hover {
-    box-shadow: 2px 2px 2px $grey-light;
-  }
-
-  .heading {
-    padding: 0 5px;
-  }
-
-  .title {
-    font-size: 20px !important;
-  }
-
-  .subtitle {
-    font-size: 18px !important;
-  }
-
-  &>img {
-    max-height: 200px;
-    border-top-left-radius: 1rem;
-    border-top-right-radius: 1rem;
-    margin: 0 0 20px 0 !important;
-  }
-
-  .profile img {
-    display: inline-block;
-    max-height: 30px;
-  }
-}
-
 @media (max-width: 1200px) {
   .post {
     max-width: 85%;
