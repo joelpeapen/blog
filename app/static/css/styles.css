@@ -352,12 +352,12 @@ nav.navbar a[href="/add"] {
   color: #9198a1;
 }
 .pill.circle {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   width: 40px;
   height: 40px;
   border-radius: 50% !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 0;
 }
 
@@ -516,6 +516,96 @@ article {
 .comment .left .head span {
   font-size: 15px;
   font-style: italic;
+}
+
+.tag-container {
+  display: flex;
+  margin: 10px auto !important;
+}
+
+.tag {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 10px;
+  font-weight: 500;
+  border-radius: 2em;
+  margin: 3px 5px;
+  flex: 0 0 15%;
+  justify-content: space-around;
+  background-color: #082437;
+  border: 1px solid #304f64;
+}
+.tag input[type=text] {
+  all: unset;
+  max-width: 80px;
+  border-bottom: 1px solid #1f6feb;
+}
+.tag input[type=submit] {
+  width: 18px;
+  height: 18px;
+  border-radius: 50% !important;
+  border: none;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  background-color: #4caf50;
+}
+.tag:hover {
+  color: #ffffff;
+  background-color: #304f64;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+}
+.tags a {
+  color: #1f6feb;
+}
+.tags a:hover {
+  text-decoration: none;
+}
+
+#tag-add-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 10px;
+  font-weight: 500;
+  border-radius: 2em;
+  margin: 5px 5px;
+  padding: 5px 10px;
+  background-color: #082437;
+  border: 1px solid #304f64;
+}
+#tag-add-form input[type=text] {
+  all: unset;
+  max-width: 80px;
+  border-bottom: 1px solid #1f6feb;
+}
+#tag-add-form input[type=submit] {
+  width: 18px;
+  height: 18px;
+  border-radius: 50% !important;
+  border: none;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  background-color: #4caf50;
+}
+
+#tag-delete {
+  display: none;
+  all: unset;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+  color: black;
+  background-color: #ff4343;
 }
 
 @media (max-width: 1200px) {

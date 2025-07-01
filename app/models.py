@@ -2,8 +2,6 @@ from uuid import uuid4
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-# comment tags
-
 
 class User(AbstractUser):
     email = models.EmailField(max_length=254)
@@ -33,6 +31,7 @@ class Post(models.Model):
         upload_to="images/splashes/", default="images/splashes/default.png"
     )
     splashdesc = models.CharField(max_length=150)
+    tags = models.ManyToManyField("Tag", related_name="post_tags")
 
     def __str__(self):
         return self.title
@@ -44,6 +43,10 @@ class Comment(models.Model):
     post = models.ForeignKey("Post", on_delete=models.CASCADE)
     date = models.DateTimeField()
     likes = models.IntegerField(default=0)
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=20, unique=True)
 
 
 class EmailConfirmationToken(models.Model):

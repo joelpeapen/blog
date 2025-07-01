@@ -403,6 +403,12 @@ nav.navbar {
   border-bottom: 1px solid $grey;
 }
 
+@mixin circle($w, $h, $r) {
+  width: $w;
+  height: $h;
+  border-radius: $r !important;
+}
+
 .pill {
   display: inline-block;
   border-radius: 20px;
@@ -419,13 +425,11 @@ nav.navbar {
   }
 
   &.circle {
+    @include circle(40px, 40px, 50%);
+
     display: flex;
     justify-content: center;
     align-items: center;
-
-    width: 40px;
-    height: 40px;
-    border-radius: 50% !important;
     padding: 0;
   }
 }
@@ -599,6 +603,86 @@ article {
       }
     }
   }
+}
+
+@mixin tag {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 10px;
+  font-weight: 500;
+  border-radius: 2em;
+
+  input[type="text"] {
+    all: unset;
+    max-width: 80px;
+    border-bottom: 1px solid $blue-light;
+  }
+
+  input[type="submit"] {
+    @include circle(18px, 18px, 50%);
+    border: none;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+
+    background-color: $green-dark;
+  }
+}
+
+.tag-container {
+  display: flex;
+  margin: 10px auto !important;
+}
+
+.tag {
+  @include tag();
+  margin: 3px 5px;
+  flex: 0 0 15%;
+  justify-content: space-around;
+
+  background-color: $navy;
+  border: 1px solid $navy-light;
+
+  &:hover {
+    color: $white;
+    background-color: $navy-light;
+  }
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+
+  a {
+    color: $blue-light;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
+
+#tag-add-form {
+  @include tag();
+  margin: 5px 5px;
+  padding: 5px 10px;
+
+  background-color: $navy;
+  border: 1px solid $navy-light;
+}
+
+#tag-delete {
+  display: none;
+  all: unset;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+  color: black;
+  background-color: $red;
 }
 
 @media (max-width: 1200px) {

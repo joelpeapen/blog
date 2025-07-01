@@ -70,6 +70,34 @@
         </div>
     </section>
 
+    <section class="tag-container middle">
+        {% if tags %}
+        <div class="tags">
+            {% for tag in tags %}
+            <a href="{% url 'tags' tag.name %}">
+            <div class="tag">
+                <span>{{ tag.name }}</span>
+                {% if user.is_authenticated and user == post.author %}
+                <form id="tag-delete-form" action="{% url 'tag-delete' post.id tag.id %}" method="post">
+                    {% csrf_token %}
+                    <input id="tag-delete" class="confirm" type="submit" value="×">
+                </form>
+                {% endif %}
+            </div>
+            </a>
+            {% endfor %}
+        {% endif %}
+        {% if user.is_authenticated and user == post.author %}
+        <form id="tag-add-form" action="{% url 'tag-add' post.id %}" method="post">
+            {% csrf_token %}
+            <label for="tag"></label>
+            <input id="tag-text" name="tag" type="text" maxlength=20>
+            <input type="submit" value="+">
+        </form>
+        {% endif %}
+        </div>
+    </section>
+
     <section class="middle">
         <div id="comment-head">
             <h5 class="title is-5">Comments ({{ count }})</h5>
@@ -84,8 +112,9 @@
                 <div class="media-content">
                     <div class="field">
                         <p class="control">
-                            <textarea id="comment" name="comment" rows=4 placeholder="Add a comment"></textarea>
+                            <textarea id="comment" name="comment" rows=4 placeholder="Add a comment" maxlength=250></textarea>
                         </p>
+                        <p id="comment-limit"></p>
                     </div>
                     <div class="action">
                         <a onClick="this.closest('form').submit()" class="button is-success is-dark">Post</a>
@@ -126,8 +155,9 @@
                             <div class="media-content">
                                 <div class="field">
                                     <p class="control">
-                                        <textarea id="comment" name="comment" rows=4 placeholder="Add a comment">{{ comment.text }}</textarea>
+                                        <textarea id="comment-edit" name="comment" rows=4 placeholder="Add a comment" maxlength=250>>{{ comment.text }}</textarea>
                                     </p>
+                                    <p id="comment-edit-limit"></p>
                                 </div>
                                 <div class="action">
                                     <a onClick="this.closest('form').submit()" class="button is-success is-dark">Save</a>

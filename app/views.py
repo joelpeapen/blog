@@ -3,13 +3,13 @@ from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.hashers import PBKDF2PasswordHasher
-from django.db.models import ManyToManyField
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 
 from app.models import (
     EmailConfirmationToken,
     Comment,
+    Tag,
     Notify,
     Post,
     User,
@@ -513,6 +513,7 @@ class BlogPost(View):
         author = get_object_or_404(User, username=username)
         post = get_object_or_404(Post, pk=id, author=author)
         comments = Comment.objects.filter(post=id)
+        tags = post.tags.all()
 
         nosplash = False
         if post.splash:
@@ -533,6 +534,7 @@ class BlogPost(View):
                 "nosplash": nosplash,
                 "comments": comments,
                 "count": comments.count(),
+                "tags": tags,
             },
         )
 
@@ -627,3 +629,59 @@ class CommentLike(View):
             comment.save()
 
         return redirect(f"/{comment.post.author}/post/{comment.post.id}#cm{comment.id}")
+
+
+class Tags(View):
+    def get(self, request, name):
+        tags = Tag.objects.filter(name=name)
+        posts = set()
+
+        for tag in tags:
+            posts.update(tag.post_tags.all())
+
+        data = {
+            "user": request.user,
+            "posts": list(posts),
+            "count": len(posts),
+        }
+
+        try:
+            tag = tags[0]
+            data["tag"] = tag
+        except IndexError:
+            return redirect("/404")
+
+        return render(request, "tags.html", data)
+
+
+class TagAdd(View):
+    def post(self, request, id):
+        post = get_object_or_404(Post, pk=id)
+
+        if not request.user.is_authenticated or request.user != post.author:
+            messages.error(request, "only the post author can add tags")
+            return redirect(f"/{post.author}/post/{id}")
+
+        tag_name = request.POST.get("tag")
+
+        if tag_name:
+            tag, _ = Tag.objects.get_or_create(name=tag_name)
+            post.tags.add(tag)
+        else:
+            messages.error(request, "Tag cannot be empty")
+
+        return redirect(f"/{post.author}/post/{id}")
+
+
+class TagDelete(View):
+    def post(self, request, pid, tid):
+        post = get_object_or_404(Post, pk=pid)
+
+        if not request.user.is_authenticated or request.user != post.author:
+            messages.error(request, "only post author can delete tags")
+            return redirect(f"/{post.author}/post/{pid}")
+
+        tag = get_object_or_404(Tag, pk=tid)
+        post.tags.remove(tag)
+
+        return redirect(f"/{post.author}/post/{pid}")

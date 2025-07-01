@@ -1,0 +1,15 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Blog++ {{ tag.name }} tags {% endblock title %}
+
+{% block content %}
+
+    <h3 class="title is-4">Tag: {{ tag.name }} ({{ count }})</h3>
+
+    {% if posts %}
+    {% include 'components/posts.html' %}
+    {% endif %}
+
+</div>
+
+{% endblock content %}
