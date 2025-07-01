@@ -9,6 +9,7 @@ from django.views import View
 
 from app.models import (
     EmailConfirmationToken,
+    Comment,
     Notify,
     Post,
     User,
@@ -16,7 +17,7 @@ from app.models import (
 from app.utils import (
     send_confirmation_email,
     send_password_email,
-    # send_comment_email,
+    send_comment_email,
     send_username_email,
 )
 
@@ -425,10 +426,12 @@ class Edit(View):
         post = get_object_or_404(Post, pk=id)
 
         if not request.user.is_authenticated or request.user != post.author:
-            return redirect(f"/{post.author.username}/post/{id}")
+            return redirect(f"/{post.author}/post/{id}")
 
         nosplash = False
         if not post.splash:
+            nosplash = True
+        elif "default.png" in post.splash.url:
             nosplash = True
 
         return render(
@@ -441,7 +444,7 @@ class Edit(View):
         post = get_object_or_404(Post, pk=id)
 
         if not request.user.is_authenticated or request.user != post.author:
-            return redirect(f"/{post.author.username}/post/{id}")
+            return redirect(f"/{post.author}/post/{id}")
 
         title = request.POST.get("title")
         subtitle = request.POST.get("subtitle")
@@ -472,7 +475,7 @@ class Edit(View):
 
         post.save()
         messages.success(request, "Post Updated")
-        return redirect(f"/{post.author.username}/post/{id}")
+        return redirect(f"/{post.author}/post/{id}")
 
 
 class Delete(View):
@@ -480,7 +483,7 @@ class Delete(View):
         post = get_object_or_404(Post, pk=id)
 
         if not request.user.is_authenticated or request.user != post.author:
-            return redirect(f"/{post.author.username}/post/{id}")
+            return redirect(f"/{post.author}/post/{id}")
 
         post.delete()
         return redirect("/user")
@@ -491,7 +494,7 @@ class Like(View):
         post = get_object_or_404(Post, pk=id)
 
         if not request.user.is_authenticated:
-            return redirect(f"/{post.author.username}/post/{id}")
+            return redirect(f"/{post.author}/post/{id}")
 
         if request.user.likes.filter(pk=id).exists():
             post.likes -= 1
@@ -502,13 +505,14 @@ class Like(View):
             request.user.likes.add(post)
             post.save()
 
-        return redirect(f"/{post.author.username}/post/{id}")
+        return redirect(f"/{post.author}/post/{id}")
 
 
 class BlogPost(View):
     def get(self, request, username, id):
         author = get_object_or_404(User, username=username)
         post = get_object_or_404(Post, pk=id, author=author)
+        comments = Comment.objects.filter(post=id)
 
         nosplash = False
         if post.splash:
@@ -523,7 +527,13 @@ class BlogPost(View):
         return render(
             request,
             "post.html",
-            {"user": request.user, "post": post, "nosplash": nosplash},
+            {
+                "user": request.user,
+                "post": post,
+                "nosplash": nosplash,
+                "comments": comments,
+                "count": comments.count(),
+            },
         )
 
 
@@ -531,3 +541,89 @@ class Posts(View):
     def get(self, request):
         posts = Post.objects.all().order_by("-views")
         return render(request, "posts.html", {"user": request.user, "posts": posts})
+
+
+class CommentAdd(View):
+    def post(self, request, id):
+        if not request.user.is_authenticated:
+            return redirect(request, "/login")
+
+        comment = request.POST.get("comment")
+        post = get_object_or_404(Post, pk=id)
+
+        if comment:
+            Comment.objects.create(
+                text=comment, post=post, user=request.user, date=datetime.utcnow()
+            )
+
+            if request.user != post.author:
+                notify = Notify.objects.get(user=post.author)
+                if notify.on_comment:
+                    send_comment_email(post.author.email, post, request.user, comment)
+
+            return redirect(f"/{post.author}/post/{id}")
+        else:
+            messages.error(request, "Must add a comment and rating")
+            return redirect(f"/{post.author}/post/{id}")
+
+        return redirect(f"/{post.author}/post/{id}#cm{comment.id}")
+
+
+class CommentEdit(View):
+    def post(self, request, id):
+        text = request.POST.get("comment")
+        comment = get_object_or_404(Comment, pk=id)
+
+        if not request.user.is_authenticated:
+            return redirect(
+                f"/{comment.post.author}/post/{comment.post.id}#cm{comment.id}"
+            )
+
+        if text:
+            comment.text = text
+            comment.save()
+            return redirect(
+                f"/{comment.post.author}/post/{comment.post.id}#cm{comment.id}"
+            )
+        else:
+            messages.error(request, "Must add a comment and rating")
+            return redirect(
+                f"/{comment.post.author}/post/{comment.post.id}#cm{comment.id}"
+            )
+
+            return redirect(
+                f"/{comment.post.author}/post/{comment.post.id}#cm{comment.id}"
+            )
+
+
+class CommentDelete(View):
+    def post(self, request, id):
+        comment = get_object_or_404(Comment, pk=id)
+
+        if not request.user.is_authenticated:
+            return redirect(f"/{comment.post.author}/post/{comment.post.id}")
+
+        if comment.user == request.user:
+            comment.delete()
+        return redirect(f"/{comment.post.author}/post/{comment.post.id}")
+
+
+class CommentLike(View):
+    def post(self, request, id):
+        comment = get_object_or_404(Comment, pk=id)
+
+        if not request.user.is_authenticated:
+            return redirect(
+                f"/{comment.post.author}/post/{comment.post.id}#cm{comment.id}"
+            )
+
+        if request.user.comment_likes.filter(pk=id).exists():
+            comment.likes -= 1
+            request.user.comment_likes.remove(comment)
+            comment.save()
+        else:
+            comment.likes += 1
+            request.user.comment_likes.add(comment)
+            comment.save()
+
+        return redirect(f"/{comment.post.author}/post/{comment.post.id}#cm{comment.id}")

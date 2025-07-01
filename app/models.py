@@ -14,6 +14,7 @@ class User(AbstractUser):
     )
     bio = models.TextField()
     likes = models.ManyToManyField("Post", related_name="liked_posts")
+    comment_likes = models.ManyToManyField("Comment", related_name="liked_comments")
 
     def __str__(self):
         return self.username
@@ -35,6 +36,14 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Comment(models.Model):
+    text = models.TextField()
+    user = models.ForeignKey("User", on_delete=models.CASCADE)
+    post = models.ForeignKey("Post", on_delete=models.CASCADE)
+    date = models.DateTimeField()
+    likes = models.IntegerField(default=0)
 
 
 class EmailConfirmationToken(models.Model):

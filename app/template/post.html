@@ -4,66 +4,151 @@
 
 {% block content %}
 
-    <div class="post">
-        <div class="heading">
-            <h1 class="title">{{ post.title }}</h1>
-            <p class="subtitle">{{ post.subtitle }}</p>
+    <section class="middle">
+        <div class="post">
+            <div class="heading">
+                <h1 class="title">{{ post.title }}</h1>
+                <p class="subtitle">{{ post.subtitle }}</p>
 
-            {% if user.is_authenticated and user == post.author %}
-            <div id="postaction">
-                <div class="pill circle edit">
-                    <a href="{% url 'edit' post.id %}">Edit</a>
+                {% if user.is_authenticated and user == post.author %}
+                <div id="postaction">
+                    <div class="pill circle edit">
+                        <a href="{% url 'edit' post.id %}">Edit</a>
+                    </div>
+                    <div class="pill circle del">
+                        <a class="confirm" href="{% url 'delete' post.id %}">Del</a>
+                    </div>
                 </div>
-                <div class="pill circle del">
-                    <a class="confirm" href="{% url 'delete' post.id %}">Del</a>
-                </div>
-            </div>
-            {% endif %}
-        </div>
-        <div class="author">
-            <div class="profile">
-                <img class="circlepic" src="/static{{ post.author.pic.url }}" alt="profile picture">
-            </div>
-            <div>
-                <a href="{% url 'user' post.author.username %}">{{ post.author.username }}</a>
-                <p>{{ post.date }}</p>
-                <p>Updated {{ post.updated }}</p>
-            </div>
-        </div>
-        <div class="meta">
-            <!-- TODO: comments count -->
-            <div class="pill">
-                <!-- <span class="icon is-small"><i class="fas fa-eye"></i></span> -->
-                <p>{{ post.views }} views</p>
-            </div>
-            <div class="pill">
-                <!-- <span class="icon is-small"><i class="fas fa-heart"></i></span> -->
-                {% if user.is_authenticated %}
-                <form id="like" action="{% url 'like' post.id %}" method="post">
-                    {% csrf_token %}
-                    <a onClick="this.closest('form').submit()" >{{ post.likes }} {% if post.likes == 0 or post.likes > 1 %}likes{% else %}like{% endif %}</a>
-                </form>
-                {% else %}
-                <p>{{ post.likes }} likes</p>
                 {% endif %}
             </div>
-            <div id="share" class="pill far-right">
-                <!-- <span class="icon is-small"><i class="fas fa-share"></i></span> -->
-                <a>Share</a>
-                <span id="copied" class="pill">Copied</span>
+            <div class="author">
+                <div class="avatar">
+                    <a href="{% url 'user' post.author %}">
+                        <img class="circlepic" src="/static{{ post.author.pic.url }}" alt="profile picture">
+                    </a>
+                </div>
+                <div>
+                    <a href="{% url 'user' post.author %}">{{ post.author }}</a>
+                    <p>{{ post.date }}</p>
+                    <p>Updated {{ post.updated }}</p>
+                </div>
+            </div>
+            <div class="meta">
+                <!-- TODO: comments count -->
+                <div class="pill">
+                    <!-- <span class="icon is-small"><i class="fas fa-eye"></i></span> -->
+                    <p>{{ post.views }} views</p>
+                </div>
+                <div class="pill">
+                    <!-- <span class="icon is-small"><i class="fas fa-heart"></i></span> -->
+                    {% if user.is_authenticated %}
+                    <form id="like" action="{% url 'like' post.id %}" method="post">
+                        {% csrf_token %}
+                        <a onClick="this.closest('form').submit()">{{ post.likes }} {% if post.likes == 0 or post.likes > 1 %}likes{% else %}like{% endif %}</a>
+                    </form>
+                    {% else %}
+                    <p>{{ post.likes }} likes</p>
+                    {% endif %}
+                </div>
+                <div id="share" class="pill far-right">
+                    <!-- <span class="icon is-small"><i class="fas fa-share"></i></span> -->
+                    <a>Share</a>
+                    <span id="copied" class="pill">Copied</span>
+                </div>
+            </div>
+
+            {% if not nosplash %}
+            <figure class="splash">
+                <img src="/static{{ post.splash.url }}" alt="{{ post.splashdesc }}">
+                {% if post.splashdesc %}<figcaption>{{ post.splashdesc }}</figcaption>{% endif %}
+            </figure>
+            {% endif %}
+
+            <article>
+                {{ post.text }}
+            </article>
+        </div>
+    </section>
+
+    <section class="middle">
+        <div id="comment-head">
+            <h5 class="title is-5">Comments ({{ count }})</h5>
+            {% if user.is_authenticated %}
+            <a id="add-comment" class="button is-info is-dark">＋</a>
+            {% endif %}
+        </div>
+        {% if user.is_authenticated %}
+        <form class="form" id="comment-form" action="{% url 'comment-add' post.id %}" method="post">
+            {% csrf_token %}
+            <div class="media">
+                <div class="media-content">
+                    <div class="field">
+                        <p class="control">
+                            <textarea id="comment" name="comment" rows=4 placeholder="Add a comment"></textarea>
+                        </p>
+                    </div>
+                    <div class="action">
+                        <a onClick="this.closest('form').submit()" class="button is-success is-dark">Post</a>
+                        <a id="comment-cancel" class="button is-danger is-dark">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+        {% endif %}
+    </section>
+
+    <div class="comments">
+    {% for comment in comments %}
+        <div id="cm{{ comment.id }}" class="comment">
+            <div class="avatar">
+                <a href="{% url 'user' comment.user %}">
+                    <img class="circlepic" src="/static{{ comment.user.pic.url }}" alt="{{ comment.user }}'s profile picture">
+                </a>
+            </div>
+            <div class="left">
+                <div class="head">
+                    <a href="{% url 'user' comment.user %}">{{ comment.user }}</a>
+                    <span>{{ comment.date }}</span>
+                    {% if user.is_authenticated and user == comment.user %}
+                    <a id="edit-comment">Edit</a>
+                    <form id="comment-delete" action="{% url 'comment-del' comment.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="confirm">Delete</button>
+                    </form>
+                    {% endif %}
+                </div>
+                <div>
+                    {% if user.is_authenticated and user == comment.user %}
+                    <p id="user-comment">{{ comment.text }}</p>
+                    <form class="form" id="comment-form-edit" action="{% url 'comment-edit' comment.id %}" method="post">
+                        {% csrf_token %}
+                        <div class="media">
+                            <div class="media-content">
+                                <div class="field">
+                                    <p class="control">
+                                        <textarea id="comment" name="comment" rows=4 placeholder="Add a comment">{{ comment.text }}</textarea>
+                                    </p>
+                                </div>
+                                <div class="action">
+                                    <a onClick="this.closest('form').submit()" class="button is-success is-dark">Save</a>
+                                    <a id="comment-cancel-edit" class="button is-danger is-dark">Cancel</a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    {% else %}
+                    <p>{{ comment.text }}</p>
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                    <form id="comment-like" action="{% url 'comment-like' comment.id %}" method="post">
+                        {% csrf_token %}
+                        <a onClick="this.closest('form').submit()">{{ comment.likes }} {% if comment.likes == 0 or comment.likes > 1 %}likes{% else %}like{% endif %}</a>
+                    </form>
+                    {% endif %}
+                </div>
             </div>
         </div>
-
-        {% if not nosplash %}
-        <figure class="splash">
-            <img src="/static{{ post.splash.url }}" alt="{{ post.splashdesc }}">
-            {% if post.splashdesc %}<figcaption>{{ post.splashdesc }}</figcaption>{% endif %}
-        </figure>
-        {% endif %}
-
-        <article>
-            {{ post.text }}
-        </article>
+    {% endfor %}
     </div>
 
 {% endblock content %}

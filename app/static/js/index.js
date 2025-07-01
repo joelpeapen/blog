@@ -34,6 +34,57 @@ document.addEventListener("DOMContentLoaded", () => {
     charLimit("splashdesc", "splashlimit")
 
     copyURL("share", "copied")
+
+    const add = document.getElementById("add-comment");
+    if (add) {
+        add.addEventListener('click', function() {
+            let c = document.getElementById("comment-form");
+            if (c.style.display === "none" || c.style.display === '') {
+                c.style.display = "block";
+                add.style.display = "none";
+            } else {
+                c.style.display = "none";
+            }
+        });
+    }
+
+    const cancel = document.getElementById("comment-cancel");
+    if (cancel) {
+        cancel.addEventListener("click", function() {
+            document.getElementById("comment-form").style.display = "none";
+            const add = document.getElementById("add-comment");
+            add.style.display = "block";
+        });
+    }
+
+    const edit = document.getElementById("edit-comment");
+    if (edit) {
+        edit.addEventListener('click', function() {
+            let c = document.getElementById("comment-form-edit");
+            let t = document.getElementById("user-comment")
+            if (c.style.display === "none" || c.style.display === '') {
+                c.style.display = "flex";
+                t.style.display = "none";
+            } else {
+                c.style.display = "none";
+                t.style.display = "block";
+            }
+        });
+    }
+
+    const cancelEdit = document.getElementById("comment-cancel-edit");
+    if (cancelEdit) {
+        cancelEdit.addEventListener("click", function() {
+            let c = document.getElementById("comment-form-edit");
+            let t = document.getElementById("user-comment")
+            if (c) {
+                c.style.display = "none";
+                t.style.display = "block";
+            } else {
+                t.style.display = "none";
+            }
+        });
+    }
 });
 
 function charLimit(input, limit) {

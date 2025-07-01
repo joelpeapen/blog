@@ -133,12 +133,12 @@ textarea:not([rows]) {
   margin-top: 10px;
 }
 
-nav {
+nav.navbar {
   color: #9198a1;
   background-color: #262626 !important;
   border-bottom: 3px solid black;
 }
-nav a[href="/add"] {
+nav.navbar a[href="/add"] {
   font-size: 25px;
   font-weight: bold;
 }
@@ -286,12 +286,13 @@ nav a[href="/add"] {
   transform: translateX(26px);
 }
 
-.post {
+.middle {
   max-width: 60%;
   overflow-wrap: break-word;
   width: 728px;
   margin: 0 auto !important;
 }
+
 .post .heading {
   position: relative;
 }
@@ -308,19 +309,22 @@ nav a[href="/add"] {
   gap: 1em;
   margin: 20px 0 0 0;
 }
-.author .profile {
+.author .avatar {
   display: flex;
   align-items: center;
 }
-.author .profile img {
+.author .avatar img {
   max-width: 50px;
 }
-.author div:not(.profile) {
+.author div:nth-of-type(2) {
   display: flex;
   flex-direction: column;
 }
-.author div:not(.profile) p {
+.author div:nth-of-type(2) p {
   font-size: 13px;
+}
+.author div:nth-of-type(3) {
+  display: flex;
 }
 
 .meta {
@@ -432,8 +436,90 @@ article {
   gap: 20px;
 }
 
+#comment-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #3d444d;
+}
+#comment-head h5 {
+  margin: 0;
+}
+#comment-head #add-comment {
+  display: inline;
+}
+
+#comment-form,
+#comment-form-edit {
+  display: none;
+  background-color: #181818;
+  border: none;
+  padding: 10px 0 0 0;
+}
+#comment-form .action,
+#comment-form-edit .action {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-start;
+}
+
+#comment-form-edit .media,
+#comment-form-edit .control {
+  width: 100%;
+}
+#comment-form-edit .media-content {
+  flex-direction: column;
+}
+#comment-form-edit textarea {
+  width: 93%;
+}
+#comment-form-edit .action {
+  gap: 5px;
+}
+
+#comment-delete button {
+  color: #ff4343;
+}
+
+#comment-like {
+  margin: 5px 0 0 0;
+}
+
+.comments {
+  max-width: 57%;
+  overflow-wrap: break-word;
+  margin: 0 auto !important;
+}
+
+.comment {
+  display: flex;
+}
+.comment .avatar {
+  margin: 20px 10px 0 0;
+}
+.comment .avatar img {
+  max-width: 50px;
+}
+.comment .left {
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid #3d444d;
+  margin: 20px 0 0 0;
+  padding: 0 0 0 10px;
+  width: 100%;
+}
+.comment .left .head {
+  display: flex;
+  gap: 10px;
+}
+.comment .left .head span {
+  font-size: 15px;
+  font-style: italic;
+}
+
 @media (max-width: 1200px) {
-  .post {
+  .post-container {
     max-width: 85%;
   }
 }
@@ -450,6 +536,13 @@ article {
     right: 0 !important;
   }
 }
+@media (max-width: 800px) {
+  .middle,
+  .comments,
+  .container.form.wide {
+    max-width: 95% !important;
+  }
+}
 @media (max-width: 650px) {
   .container.form {
     margin-top: 25% !important;
@@ -462,7 +555,7 @@ article {
 @media (max-width: 480px) {
   #postaction {
     top: 100%;
-    margin-right: -10%;
+    margin-right: 0;
     position: absolute;
     left: auto !important;
     right: 0 !important;
@@ -470,8 +563,8 @@ article {
 }
 @media (max-width: 400px) {
   #postaction {
-    top: 0%;
-    margin-right: -10%;
+    top: 20%;
+    margin-right: -5%;
     position: absolute;
     left: auto !important;
     right: 0 !important;

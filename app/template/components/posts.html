@@ -2,7 +2,7 @@
     {% for p in posts %}
     <div class="card">
         <div class="card-image">
-            <a href="{%  url 'post' p.author.username p.id %}">
+            <a href="{%  url 'post' p.author p.id %}">
                 <figure class="image">
                     <img src="{% if p.splash %}/static{{ p.splash.url }}{% endif %}" alt="{{ p.splashdesc }}">
                 </figure>
@@ -21,7 +21,7 @@
                     </figure>
                 </div>
                 <div class="media-content">
-                    <a href="{% url 'user' p.author.username %}">{{ p.author.username }}</a>
+                    <a href="{% url 'user' p.author %}">{{ p.author }}</a>
                     {{ p.date }}
                 </div>
             </div>

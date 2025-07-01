@@ -167,7 +167,7 @@ textarea:not([rows]) {
   }
 }
 
-nav {
+nav.navbar {
   color: $grey-light;
   background-color: $grey-dark !important;
   border-bottom: 3px solid black;
@@ -342,12 +342,14 @@ nav {
   }
 }
 
-.post {
+.middle {
   max-width: 60%;
   overflow-wrap: break-word;
   width: 728px;
   margin: 0 auto !important;
+}
 
+.post {
   .heading {
     position: relative;
   }
@@ -367,7 +369,7 @@ nav {
   gap: 1em;
   margin: 20px 0 0 0;
 
-  .profile {
+  .avatar {
     display: flex;
     align-items: center;
 
@@ -376,7 +378,7 @@ nav {
     }
   }
 
-  div:not(.profile) {
+  div:nth-of-type(2) {
     display: flex;
     flex-direction: column;
 
@@ -385,6 +387,9 @@ nav {
     }
   }
 
+  div:nth-of-type(3) {
+    display: flex;
+  }
 }
 
 .meta {
@@ -499,8 +504,105 @@ article {
   gap: 20px;
 }
 
+#comment-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 20px;
+  border-bottom: 1px solid $grey;
+
+  h5 {
+    margin: 0;
+  }
+
+  #add-comment {
+    display: inline;
+  }
+}
+
+#comment-form,
+#comment-form-edit {
+  display: none;
+  background-color: $grey-darker;
+  border: none;
+  padding: 10px 0 0 0;
+
+  .action {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start;
+  }
+}
+
+#comment-form-edit {
+
+  .media,
+  .control {
+    width: 100%;
+  }
+
+  .media-content {
+    flex-direction: column;
+  }
+
+  textarea {
+    width: 93%;
+  }
+
+  .action {
+    gap: 5px;
+  }
+}
+
+#comment-delete {
+  button {
+    color: $red;
+  }
+}
+
+#comment-like {
+  margin: 5px 0 0 0;
+}
+
+.comments {
+  max-width: 57%;
+  overflow-wrap: break-word;
+  margin: 0 auto !important;
+}
+
+.comment {
+  display: flex;
+
+  .avatar {
+    margin: 20px 10px 0 0;
+
+    img {
+      max-width: 50px;
+    }
+  }
+
+  .left {
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid $grey;
+    margin: 20px 0 0 0;
+    padding: 0 0 0 10px;
+    width: 100%;
+
+    .head {
+      display: flex;
+      gap: 10px;
+
+      span {
+        font-size: 15px;
+        font-style: italic;
+      }
+    }
+  }
+}
+
 @media (max-width: 1200px) {
-  .post {
+  .post-container {
     max-width: 85%;
   }
 }
@@ -515,6 +617,15 @@ article {
 
   #postaction {
     @include floater(100%, 0%);
+  }
+}
+
+@media (max-width: 800px) {
+
+  .middle,
+  .comments,
+  .container.form.wide {
+    max-width: 95% !important;
   }
 }
 
@@ -533,12 +644,12 @@ article {
 
 @media (max-width: 480px) {
   #postaction {
-    @include floater(100%, -10%);
+    @include floater(100%, 0);
   }
 }
 
 @media (max-width: 400px) {
   #postaction {
-    @include floater(0%, -10%);
+    @include floater(20%, -5%);
   }
 }
