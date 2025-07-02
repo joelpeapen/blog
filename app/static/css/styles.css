@@ -126,8 +126,7 @@ textarea:not([rows]) {
   max-width: 30%;
   padding: 20px;
   border-radius: 8px;
-  background-color: #0c1a24;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: #262626;
 }
 #popup button {
   margin-top: 10px;
@@ -223,8 +222,8 @@ nav.navbar a[href="/add"] {
 }
 .form input:focus,
 .form textarea:focus {
-  outline: 0.08rem solid #54a4dc;
-  box-shadow: inset 0 0 0 1px #1f6feb;
+  outline: 0.08rem solid #3d444d;
+  box-shadow: inset 0 0 0 1px #9198a1;
 }
 .form input,
 .form textarea,
@@ -440,8 +439,9 @@ article {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin: 20px 0 0 0;
   padding-bottom: 20px;
-  border-bottom: 1px solid #3d444d;
+  border-bottom: 5px solid #3d444d;
 }
 #comment-head h5 {
   margin: 0;
@@ -451,45 +451,45 @@ article {
 }
 
 #comment-form,
-#comment-form-edit {
+.comment-form-edit {
   display: none;
   background-color: #181818;
   border: none;
   padding: 10px 0 0 0;
 }
 #comment-form .action,
-#comment-form-edit .action {
+.comment-form-edit .action {
   display: flex;
   gap: 10px;
   justify-content: flex-start;
 }
 
-#comment-form-edit .media,
-#comment-form-edit .control {
+.comment-form-edit .media,
+.comment-form-edit .control {
   width: 100%;
 }
-#comment-form-edit .media-content {
+.comment-form-edit .media-content {
   flex-direction: column;
 }
-#comment-form-edit textarea {
+.comment-form-edit textarea {
   width: 93%;
 }
-#comment-form-edit .action {
+.comment-form-edit .action {
   gap: 5px;
 }
 
-#comment-delete button {
-  color: #ff4343;
+.comment-like {
+  margin: 5px 0 0 0;
 }
 
-#comment-like {
-  margin: 5px 0 0 0;
+.comment-delete button {
+  color: #ff4343;
 }
 
 .comments {
   max-width: 57%;
   overflow-wrap: break-word;
-  margin: 0 auto !important;
+  margin: 1.5em auto !important;
 }
 
 .comment {
@@ -504,7 +504,7 @@ article {
 .comment .left {
   display: flex;
   flex-direction: column;
-  border-left: 1px solid #3d444d;
+  border-left: 3px solid #3d444d;
   margin: 20px 0 0 0;
   padding: 0 0 0 10px;
   width: 100%;
@@ -516,6 +516,9 @@ article {
 .comment .left .head span {
   font-size: 15px;
   font-style: italic;
+}
+.comment .left .content {
+  padding: 0 30px 0 0;
 }
 
 .tag-container {

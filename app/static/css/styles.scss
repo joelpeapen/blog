@@ -159,8 +159,7 @@ textarea:not([rows]) {
   max-width: 30%;
   padding: 20px;
   border-radius: 8px;
-  background-color: $navy-dark;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: $grey-dark;
 
   button {
     margin-top: 10px;
@@ -266,8 +265,8 @@ nav.navbar {
     border: none;
 
     &:focus {
-      outline: 0.08rem solid $blue;
-      box-shadow: inset 0 0 0 1px $blue-light;
+      outline: 0.08rem solid $grey;
+      box-shadow: inset 0 0 0 1px $grey-light;
     }
   }
 
@@ -512,8 +511,9 @@ article {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin: 20px 0 0 0;
   padding-bottom: 20px;
-  border-bottom: 1px solid $grey;
+  border-bottom: 5px solid $grey;
 
   h5 {
     margin: 0;
@@ -525,7 +525,7 @@ article {
 }
 
 #comment-form,
-#comment-form-edit {
+.comment-form-edit {
   display: none;
   background-color: $grey-darker;
   border: none;
@@ -538,7 +538,7 @@ article {
   }
 }
 
-#comment-form-edit {
+.comment-form-edit {
 
   .media,
   .control {
@@ -558,20 +558,20 @@ article {
   }
 }
 
-#comment-delete {
+.comment-like {
+  margin: 5px 0 0 0;
+}
+
+.comment-delete {
   button {
     color: $red;
   }
 }
 
-#comment-like {
-  margin: 5px 0 0 0;
-}
-
 .comments {
   max-width: 57%;
   overflow-wrap: break-word;
-  margin: 0 auto !important;
+  margin: 1.5em auto !important;
 }
 
 .comment {
@@ -588,7 +588,7 @@ article {
   .left {
     display: flex;
     flex-direction: column;
-    border-left: 1px solid $grey;
+    border-left: 3px solid $grey;
     margin: 20px 0 0 0;
     padding: 0 0 0 10px;
     width: 100%;
@@ -601,6 +601,10 @@ article {
         font-size: 15px;
         font-style: italic;
       }
+    }
+
+    .content {
+      padding: 0 30px 0 0;
     }
   }
 }

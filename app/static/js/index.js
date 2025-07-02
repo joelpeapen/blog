@@ -32,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     charLimit("title", "titlelimit")
     charLimit("subtitle", "sublimit")
     charLimit("splashdesc", "splashlimit")
+    charLimit("comment", "comment-limit")
 
     copyURL("share", "copied")
 
@@ -50,39 +51,49 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const cancel = document.getElementById("comment-cancel");
     if (cancel) {
-        cancel.addEventListener("click", function() {
+        cancel.addEventListener("click", () => {
             document.getElementById("comment-form").style.display = "none";
             const add = document.getElementById("add-comment");
             add.style.display = "block";
         });
     }
 
-    const edit = document.getElementById("edit-comment");
-    if (edit) {
-        edit.addEventListener('click', function() {
-            let c = document.getElementById("comment-form-edit");
-            let t = document.getElementById("user-comment")
-            if (c.style.display === "none" || c.style.display === '') {
-                c.style.display = "flex";
-                t.style.display = "none";
-            } else {
-                c.style.display = "none";
-                t.style.display = "block";
-            }
+    let editComment = document.querySelectorAll('.edit-comment');
+    if (editComment) {
+        editComment.forEach(edit => {
+            edit.addEventListener('click', () => {
+                const id = edit.id.split('-')[2];
+                const form = document.getElementById(`comment-form-edit-${id}`);
+                const text = document.getElementById(`user-comment-${id}`);
+
+                charLimit(`comment-edit-${id}`, `comment-edit-limit-${id}`)
+
+                if (form.style.display === "none" || form.style.display === '') {
+                    form.style.display = "flex";
+                    text.style.display = "none";
+                } else {
+                    form.style.display = "none";
+                    text.style.display = "block";
+                }
+            });
         });
     }
 
-    const cancelEdit = document.getElementById("comment-cancel-edit");
-    if (cancelEdit) {
-        cancelEdit.addEventListener("click", function() {
-            let c = document.getElementById("comment-form-edit");
-            let t = document.getElementById("user-comment")
-            if (c) {
-                c.style.display = "none";
-                t.style.display = "block";
-            } else {
-                t.style.display = "none";
-            }
+    let editCommentCancel = document.querySelectorAll('.comment-cancel-edit');
+    if (editCommentCancel) {
+        editCommentCancel.forEach(cancel => {
+            cancel.addEventListener("click", () => {
+                const id = cancel.id.split('-')[3];
+                const form = document.getElementById(`comment-form-edit-${id}`);
+                const text = document.getElementById(`user-comment-${id}`);
+
+                if (form) {
+                    form.style.display = "none";
+                    text.style.display = "block";
+                } else {
+                    text.style.display = "none";
+                }
+            });
         });
     }
 });

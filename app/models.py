@@ -38,7 +38,7 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    text = models.TextField()
+    text = models.CharField(max_length=250)
     user = models.ForeignKey("User", on_delete=models.CASCADE)
     post = models.ForeignKey("Post", on_delete=models.CASCADE)
     date = models.DateTimeField()
