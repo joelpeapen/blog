@@ -1,0 +1,34 @@
+<div class="container blogs">
+    {% for b in blogs %}
+    <div class="card">
+        <div class="card-image">
+            <a href="{%  url 'blog' b.name %}">
+                <figure class="image">
+                    <img src="{% if b.splash %}/static{{ b.splash.url }}{% endif %}">
+                </figure>
+            </a>
+        </div>
+        <div class="card-content">
+            <div class="content">
+                <a href="{%  url 'blog' b.name %}">
+                    <p class="title is-4">{{ b.name }}</p>
+                    <p class="subtitle">{{ b.about }}</p>
+                </a>
+                <p>{{ b.subscriber_count }} subscribers</p>
+            </div>
+
+            <div class="media">
+                <div class="media-left">
+                    <figure class="image is-48x48">
+                        <img class="circlepic" src="/static{{ b.author.pic.url }}" alt="profile picture">
+                    </figure>
+                </div>
+                <div class="media-content">
+                    <a href="{% url 'user' b.author %}">{{ b.author }}</a>
+                    {{ b.date }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>

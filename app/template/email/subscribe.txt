@@ -1,0 +1,5 @@
+You subscribed to {{ author }}'s blog at http://localhost:8000/blog/{{ blog.name }}
+
+A message from the {{ author }}:
+
+{{ welcome }}

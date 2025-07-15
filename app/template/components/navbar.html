@@ -15,12 +15,20 @@
 
     <div id="navbar" class="navbar-menu">
         <div class="navbar-start">
+            <a class="navbar-item" href="{% url 'blogs' %}">Blogs</a>
             <a class="navbar-item" href="{% url 'posts' %}">Posts</a>
         </div>
 
         <div class="navbar-end">
             {% if user.is_authenticated %}
-            <a class="navbar-item is-arrowless" href="/add">＋</a>
+            <a class="navbar-item" href="{% url 'subscriptions' %}">Subscriptions</a>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">＋</a>
+                <div class="navbar-dropdown">
+                    <a class="navbar-item" href="/add">Add Post</a>
+                    <a class="navbar-item" href="/blog/add">Add Blog</a>
+                </div>
+            </div>
             {% endif %}
             <div class="navbar-item has-dropdown is-hoverable">
                 {% if user.is_authenticated %}

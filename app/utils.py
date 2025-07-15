@@ -26,7 +26,7 @@ def send_comment_email(email, post, commenter, comment):
     }
     message = get_template("email/comment.txt").render(data)
     send_mail(
-        subject="OpenTrader: Comment on post",
+        subject="Blog++: Comment on post",
         message=message,
         from_email="admin@app.com",
         recipient_list=[email],
@@ -37,7 +37,7 @@ def send_comment_email(email, post, commenter, comment):
 def send_username_email(email, username):
     message = get_template("email/username.txt").render({"username": username})
     send_mail(
-        subject="Your OpenTrader username",
+        subject="Your Blog++ username",
         message=message,
         from_email="admin@app.com",
         recipient_list=[email],
@@ -52,7 +52,7 @@ def send_password_email(email, token_id):
     }
     message = get_template("email/password.txt").render(data)
     send_mail(
-        subject="Your OpenTrader password recovery",
+        subject="Your Blog++ password recovery",
         message=message,
         from_email="admin@app.com",
         recipient_list=[email],
@@ -60,11 +60,33 @@ def send_password_email(email, token_id):
     )
 
 
-# TODO: email subscribers after make a post
-# only if the subscriber has that setting turned on for that blogger
-# only accessible on blogger page by clicking notificatoin icon
+def send_subscribe_email(email, blog):
+    data = {
+        "blog": blog,
+        "author": blog.author,
+        "welcome": blog.welcome
+    }
+    message = get_template("email/subscribe.txt").render(data)
+    send_mail(
+        subject="Blog++: New Subscription",
+        message=message,
+        from_email="admin@app.com",
+        recipient_list=[email],
+        fail_silently=True,
+    )
 
-# class post-notify
-#    User -> User
-#    Blogger -> User
-#    notify = Bool
+
+def send_post_email(email, blog, post):
+    data = {
+        "author": post.author,
+        "blog": blog.name,
+        "post": post,
+    }
+    message = get_template("email/post.txt").render(data)
+    send_mail(
+        subject=f"Blog++: New Post in {blog}",
+        message=message,
+        from_email="admin@app.com",
+        recipient_list=[email],
+        fail_silently=True,
+    )

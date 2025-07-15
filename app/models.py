@@ -18,7 +18,22 @@ class User(AbstractUser):
         return self.username
 
 
+class Blog(models.Model):
+    name = models.CharField(max_length=75, unique=True)
+    author = models.ForeignKey("User", on_delete=models.CASCADE)
+    splash = models.ImageField(
+        upload_to="images/blogs/", default="images/blogs/default.png"
+    )
+    about = models.TextField()
+    date = models.DateTimeField()
+    welcome = models.TextField()
+
+    def __str__(self):
+        return self.name
+
+
 class Post(models.Model):
+    blog = models.ForeignKey("Blog", on_delete=models.CASCADE)
     title = models.CharField(max_length=150)
     subtitle = models.CharField(max_length=250)
     text = models.TextField()
@@ -32,9 +47,18 @@ class Post(models.Model):
     )
     splashdesc = models.CharField(max_length=150)
     tags = models.ManyToManyField("Tag", related_name="post_tags")
+    limit_comments = models.BooleanField(default=False)
+    no_comments = models.BooleanField(default=False)
+    subonly = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
+
+
+class Subscriber(models.Model):
+    user = models.ForeignKey("User", on_delete=models.CASCADE)
+    blog = models.ForeignKey("Blog", on_delete=models.CASCADE)
+    notify = models.BooleanField(default=True)
 
 
 class Comment(models.Model):
@@ -47,6 +71,9 @@ class Comment(models.Model):
 
 class Tag(models.Model):
     name = models.CharField(max_length=20, unique=True)
+
+    def __str__(self):
+        return self.name
 
 
 class EmailConfirmationToken(models.Model):

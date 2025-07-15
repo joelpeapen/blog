@@ -137,10 +137,6 @@ nav.navbar {
   background-color: #262626 !important;
   border-bottom: 3px solid black;
 }
-nav.navbar a[href="/add"] {
-  font-size: 25px;
-  font-weight: bold;
-}
 
 .navbar-start,
 .navbar-end {
@@ -252,6 +248,11 @@ nav.navbar a[href="/add"] {
   align-items: center;
   justify-content: space-between;
 }
+.toggler.small {
+  align-items: unset;
+  justify-content: flex-start;
+  gap: 30px;
+}
 
 .toggle {
   width: 60px;
@@ -267,7 +268,7 @@ nav.navbar a[href="/add"] {
   width: 50px;
   height: 25px;
   border-radius: 24px;
-  background-color: #262626;
+  background-color: #3d444d;
   cursor: pointer;
 }
 .toggle .slider:before {
@@ -292,6 +293,25 @@ nav.navbar a[href="/add"] {
   margin: 0 auto !important;
 }
 
+.posts,
+.blogs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.subscribe {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+}
+.subscribe #subscribe {
+  width: 92%;
+}
+.subscribe #subscribe a {
+  width: 100%;
+}
+
 .post .heading {
   position: relative;
 }
@@ -306,7 +326,7 @@ nav.navbar a[href="/add"] {
 .author {
   display: flex;
   gap: 1em;
-  margin: 20px 0 0 0;
+  margin: 20px 0 20px 0;
 }
 .author .avatar {
   display: flex;
@@ -326,13 +346,17 @@ nav.navbar a[href="/add"] {
   display: flex;
 }
 
+.card .author {
+  margin: 20px 0 0 0;
+}
+
 .meta {
   display: flex;
   justify-content: flex-start;
   position: relative;
   gap: 10px;
   padding: 15px 0;
-  margin: 20px 0 20px 0;
+  margin: 0 0 20px 0;
   border-top: 1px solid #3d444d;
   border-bottom: 1px solid #3d444d;
 }
@@ -383,25 +407,18 @@ nav.navbar a[href="/add"] {
   z-index: 1000;
 }
 
-#postaction {
-  top: 0%;
-  margin-right: -2%;
-  position: absolute;
-  left: auto !important;
-  right: 0 !important;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  width: 60px;
+.notify {
+  border: 2px solid #4cca51;
+}
+.notify a {
+  color: #4cca51 !important;
 }
 
 .edit {
-  border: 2px solid #4cca51;
+  border: 2px solid #fabd2f;
 }
 .edit a {
-  color: #4cca51 !important;
+  color: #fabd2f !important;
 }
 
 .del {
@@ -411,7 +428,21 @@ nav.navbar a[href="/add"] {
   color: #ff4343 !important;
 }
 
+#postaction,
+#blogaction {
+  top: 0%;
+  margin-right: 0%;
+  position: absolute;
+  left: auto !important;
+  right: 0 !important;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
 .splash {
+  margin: 40px 0;
   text-align: center;
 }
 .splash img {
@@ -427,12 +458,6 @@ article {
   margin: 50px 0;
   font-size: 20px;
   font-family: Helvetica;
-}
-
-.posts {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
 }
 
 #comment-head {
@@ -456,6 +481,12 @@ article {
   background-color: #181818;
   border: none;
   padding: 10px 0 0 0;
+}
+#comment-form .field,
+#comment-form .control,
+.comment-form-edit .field,
+.comment-form-edit .control {
+  margin: 0 !important;
 }
 #comment-form .action,
 .comment-form-edit .action {
@@ -484,6 +515,10 @@ article {
 
 .comment-delete button {
   color: #ff4343;
+}
+
+.edit-comment {
+  color: #fabd2f;
 }
 
 .comments {
@@ -621,15 +656,8 @@ article {
     margin-top: 15% !important;
     max-width: 50% !important;
   }
-  #postaction {
-    top: 100%;
-    margin-right: 0%;
-    position: absolute;
-    left: auto !important;
-    right: 0 !important;
-  }
 }
-@media (max-width: 800px) {
+@media (max-width: 850px) {
   .middle,
   .comments,
   .container.form.wide {
@@ -645,17 +673,20 @@ article {
     font-size: 1.5rem;
   }
 }
-@media (max-width: 480px) {
-  #postaction {
-    top: 100%;
-    margin-right: 0;
+@media (max-width: 600px) {
+  #postaction,
+  #blogaction {
+    top: 0%;
+    margin-right: 0%;
     position: absolute;
     left: auto !important;
     right: 0 !important;
+    flex-direction: column;
   }
 }
 @media (max-width: 400px) {
-  #postaction {
+  #postaction,
+  #blogaction {
     top: 20%;
     margin-right: -5%;
     position: absolute;

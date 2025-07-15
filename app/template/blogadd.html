@@ -1,0 +1,47 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Create New Blog {% endblock title %}
+
+{% block content %}
+
+    <div class="container form wide">
+        <h4 class="title">Add Blog</h4>
+        <form action="{% url 'blog-add' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="field">
+                <label class="label" for="name">Name*</label>
+                <div class="control">
+                    <input id="name" type="text" name="name" maxlength=75 required>
+                </div>
+                <p id="namelimit"></p>
+            </div>
+
+            <div class="field">
+                <label class="label" for="about">About*</label>
+                <div class="control">
+                    <textarea name="about" rows=4 cols=24></textarea>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label" for="welcome">Welcome message for new subscribers*</label>
+                <div class="control">
+                    <textarea name="welcome" rows=4 cols=24 required>{{ blog.welcome }}</textarea>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label" for="splash">Blog Image</label>
+                <input id="splash" name="splash" type="file" accept="image/*">
+            </div>
+
+            <div class="field">
+                <p class="control">
+                    <button class="button is-success is-dark" type="submit" name="submit">Create</button>
+                </p>
+            </div>
+        </form>
+    </div>
+
+{% endblock content %}

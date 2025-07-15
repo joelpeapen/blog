@@ -10,6 +10,20 @@
             {% csrf_token %}
 
             <div class="field">
+                <label class="label">Blog*</label>
+                <div class="control">
+                    <div class="select">
+                        <select name="blog" id="blog" required>
+                            <option value="">--Select a Blog--</option>
+                            {% for b in blogs %}
+                            <option value="{{ b.name }}">{{ b.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
                 <label class="label" for="title">Title*</label>
                 <div class="control">
                     <input id="title" type="text" name="title" maxlength=150 required>
@@ -42,8 +56,32 @@
             <div class="field">
                 <label class="label" for="text">Content*</label>
                 <div class="control">
-                    <textarea id="text" name="text" rows=4 cols=100></textarea>
+                    <textarea id="text" name="text" rows=4 cols=100 required></textarea>
                 </div>
+            </div>
+
+            <div class="toggler small">
+                <span>Turn off comments</span>
+                <label class="toggle" for="no-comments">
+                    <input id="no-comments" name="no-comments" type="checkbox" {% if post.no_comments == True %}checked{% endif %}>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="toggler small">
+                <span>Limit comments to subscribers</span>
+                <label class="toggle" for="limit-comments">
+                    <input id="limit-comments" name="limit-comments" type="checkbox" {% if post.limit_comments == True %}checked{% endif %}>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="toggler small">
+                <span>Subscribers only</span>
+                <label class="toggle" for="sub-only">
+                    <input id="sub-only" name="sub-only" type="checkbox" {% if post.subonly == True %}checked{% endif %}>
+                    <span class="slider"></span>
+                </label>
             </div>
 
             <div class="field">

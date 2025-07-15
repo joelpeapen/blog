@@ -9,6 +9,7 @@
             <div class="heading">
                 <h1 class="title">{{ post.title }}</h1>
                 <p class="subtitle">{{ post.subtitle }}</p>
+                <p>in <a href="{% url 'blog' post.blog.name %}">{{ post.blog }}</a></p>
 
                 {% if user.is_authenticated and user == post.author %}
                 <div id="postaction">
@@ -21,6 +22,14 @@
                 </div>
                 {% endif %}
             </div>
+
+            {% if not nosplash %}
+            <figure class="splash">
+                <img src="/static{{ post.splash.url }}" alt="{{ post.splashdesc }}">
+                {% if post.splashdesc %}<figcaption>{{ post.splashdesc }}</figcaption>{% endif %}
+            </figure>
+
+            {% endif %}
             <div class="author">
                 <div class="avatar">
                     <a href="{% url 'user' post.author %}">
@@ -34,7 +43,6 @@
                 </div>
             </div>
             <div class="meta">
-                <!-- TODO: comments count -->
                 <div class="pill">
                     <!-- <span class="icon is-small"><i class="fas fa-eye"></i></span> -->
                     <p>{{ post.views }} views</p>
@@ -50,6 +58,10 @@
                     <p>{{ post.likes }} likes</p>
                     {% endif %}
                 </div>
+                <div class="pill">
+                    <!-- <span class="icon is-small"><i class="fas fa-eye"></i></span> -->
+                    <a href="#comments">{{ count }} comments</a>
+                </div>
                 <div id="share" class="pill far-right">
                     <!-- <span class="icon is-small"><i class="fas fa-share"></i></span> -->
                     <a>Share</a>
@@ -57,15 +69,12 @@
                 </div>
             </div>
 
-            {% if not nosplash %}
-            <figure class="splash">
-                <img src="/static{{ post.splash.url }}" alt="{{ post.splashdesc }}">
-                {% if post.splashdesc %}<figcaption>{{ post.splashdesc }}</figcaption>{% endif %}
-            </figure>
-            {% endif %}
-
             <article>
+                {% if not viewable %}
+                SUBSCRIBE TO THE BLOG TO READ THIS POST
+                {% else %}
                 {{ post.text }}
+                {% endif %}
             </article>
         </div>
     </section>
@@ -74,9 +83,9 @@
         {% if tags %}
         <div class="tags">
             {% for tag in tags %}
-            <a href="{% url 'tags' tag.name %}">
+            <a href="{% url 'tags' tag %}">
             <div class="tag">
-                <span>{{ tag.name }}</span>
+                <span>{{ tag }}</span>
                 {% if user.is_authenticated and user == post.author %}
                 <form id="tag-delete-form" action="{% url 'tag-delete' post.id tag.id %}" method="post">
                     {% csrf_token %}
@@ -101,7 +110,7 @@
     <div class="middle">
         <div id="comment-head">
             <h5 class="title is-5">Comments ({{ count }})</h5>
-            {% if user.is_authenticated %}
+            {% if user.is_authenticated and post.no_comments == False %}
             <a id="add-comment" class="button is-info is-dark">＋</a>
             {% endif %}
         </div>
@@ -126,7 +135,8 @@
         {% endif %}
     </div>
 
-    <section class="comments">
+    {% if viewable %}
+    <section id="comments" class="comments">
     {% for comment in comments %}
         <div id="cm{{ comment.id }}" class="comment">
             <div class="avatar">
@@ -180,5 +190,6 @@
         </div>
     {% endfor %}
     </section>
+    {% endif %}
 
 {% endblock content %}

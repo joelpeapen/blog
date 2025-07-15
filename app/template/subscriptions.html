@@ -1,0 +1,13 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Subscriptions {% endblock title %}
+
+{% block content %}
+
+    <section class="container">
+        <h3 class="title is-3">Subscriptions ({{ count }})</h3>
+
+        {% include 'components/blogs.html' %}
+    </section>
+
+{% endblock content %}

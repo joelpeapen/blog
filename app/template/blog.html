@@ -1,0 +1,62 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} {{ blog.name }} {% endblock title %}
+
+{% block content %}
+
+    <section class="container middle">
+        <div class="heading">
+            <h3 class="title">{{ blog.name }}</h3>
+            <p class="subtitle">{{ blog.about }}</p>
+
+            {% if not nosplash %}
+            <figure class="splash">
+                <img src="/static{{ blog.splash.url }}" alt="blog image">
+            </figure>
+            {% endif %}
+
+            <div class="author">
+                <div class="avatar">
+                    <a href="{% url 'user' blog.author %}">
+                        <img class="circlepic" src="/static{{ blog.author.pic.url }}" alt="profile picture">
+                    </a>
+                </div>
+                <div>
+                    <a href="{% url 'user' blog.author %}">{{ blog.author }}</a>
+                    <p>{{ blog.date }}</p>
+                </div>
+            </div>
+        </div>
+
+        {% if user.is_authenticated and user == blog.author %}
+        <div id="blogaction">
+            <div class="pill circle edit">
+                <a href="{% url 'blog-edit' blog.name %}">Edit</a>
+            </div>
+            <div class="pill circle del">
+                <a class="confirm" href="{% url 'blog-del' blog.name %}">Del</a>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if user.is_authenticated %}
+        <div class="subscribe">
+            <div id="subscribe" class="field">
+                <p class="control">
+                    <a href="{% url 'subscribe' blog.name %}" class="button is-success is-dark">{% if is_subscribed == False %}Subscribe{% else %}Unsubscribe{% endif %} ({{subscriber_count}})</a>
+                </p>
+            </div>
+            <div class="pill circle notify">
+                <a href="{% url 'subnotify' blog.name %}">{% if subscriber.notify %}YES{% else %}NO{% endif %}</a>
+            </div>
+        </div>
+        {% endif %}
+    </section>
+
+    <section class="container">
+        <h3 class="title is-3">Posts ({{ count }})</h3>
+
+        {% include 'components/posts.html' %}
+    </section>
+
+{% endblock content %}

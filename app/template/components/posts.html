@@ -9,20 +9,24 @@
             </a>
         </div>
         <div class="card-content">
-            <div class="content">
-                <p class="title is-4">{{ p.title }}</p>
-                <p class="subtitle">{{ p.subtitle }}</p>
-            </div>
-
-            <div class="media">
-                <div class="media-left">
-                    <figure class="image is-48x48">
-                        <img class="circlepic" src="/static{{ p.author.pic.url }}" alt="profile picture">
-                    </figure>
+            <a href="{%  url 'post' p.author p.id %}">
+                <div class="content">
+                    <p class="title is-4">{{ p.title }}</p>
+                    <p class="subtitle">{{ p.subtitle }}</p>
                 </div>
-                <div class="media-content">
+            </a>
+
+            <p>in <a href="{% url 'blog' p.blog.name %}">{{ p.blog }}</a></p>
+
+            <div class="author">
+                <div class="avatar">
+                    <a href="{% url 'user' p.author %}">
+                        <img class="circlepic" src="/static{{ p.author.pic.url }}" alt="profile picture">
+                    </a>
+                </div>
+                <div>
                     <a href="{% url 'user' p.author %}">{{ p.author }}</a>
-                    {{ p.date }}
+                    <p>{{ p.date }}</p>
                 </div>
             </div>
         </div>

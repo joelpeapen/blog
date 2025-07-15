@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
     charLimit("subtitle", "sublimit")
     charLimit("splashdesc", "splashlimit")
     charLimit("comment", "comment-limit")
+    charLimit("name", "namelimit")
 
     copyURL("share", "copied")
 

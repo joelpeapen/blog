@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.db.models import Count
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.hashers import PBKDF2PasswordHasher
@@ -7,17 +8,21 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 
 from app.models import (
-    EmailConfirmationToken,
+    Blog,
     Comment,
-    Tag,
+    EmailConfirmationToken,
     Notify,
     Post,
+    Subscriber,
+    Tag,
     User,
 )
 from app.utils import (
+    send_comment_email,
     send_confirmation_email,
     send_password_email,
-    send_comment_email,
+    send_post_email,
+    send_subscribe_email,
     send_username_email,
 )
 
@@ -101,7 +106,7 @@ class Logout(View):
         return redirect("/login")
 
 
-class appUser(View):
+class AppUser(View):
     def get(self, request, username=None):
         if username:
             profile = get_object_or_404(User, username=username)
@@ -113,6 +118,7 @@ class appUser(View):
                     "profile": profile,
                     "user": request.user,
                     "posts": Post.objects.filter(author=profile),
+                    "blogs": Blog.objects.filter(author=profile),
                 },
             )
 
@@ -389,35 +395,64 @@ class Add(View):
         if not request.user.is_authenticated:
             return redirect("/login")
 
-        return render(request, "add.html", {"user": request.user})
+        blogs = Blog.objects.filter(author=request.user)
+        return render(request, "add.html", {"user": request.user, "blogs": blogs})
 
     def post(self, request):
         if not request.user.is_authenticated:
             return redirect("/login")
 
         author = request.user
+        blogname = request.POST.get("blog")
         title = request.POST.get("title")
         subtitle = request.POST.get("subtitle")
         text = request.POST.get("text")
         date = datetime.utcnow()
         splash = request.FILES.get("splash")
         splashdesc = request.POST.get("splashdesc")
+        limit = request.POST.get("limit-comments")
+        nocomment = request.POST.get("no-comments")
+        subonly = request.POST.get("sub-only")
 
-        if title and text:
+        if blogname and title and text:
+            blog = get_object_or_404(Blog, name=blogname)
+
+            if author != blog.author:
+                messages.error(request, "You do not own that blog")
+                return redirect(request.META.get("HTTP_REFERER"))
+
             post = Post.objects.create(
                 author=author,
+                blog=blog,
                 title=title,
                 subtitle=subtitle,
                 text=text,
                 date=date,
                 updated=date,
-                splash=splash,
-                splashdesc=splashdesc,
             )
+
+            if splash:
+                post.splash = splash
+                post.splashdesc = splashdesc
+
+            if nocomment:
+                post.no_comments = True
+
+            if limit:
+                post.limit_comments = True
+
+            if subonly:
+                post.subonly = True
+
             post.save()
+
+            for s in Subscriber.objects.filter(blog=blog):
+                if s.notify:
+                    send_post_email(s.user.email, blog, post)
+
             return redirect(f"/{post.author}/post/{post.id}")
         else:
-            messages.error(request, "You must provide a Title and Content")
+            messages.error(request, "You must provide a Blog, Title, and Content")
             return redirect(request.META.get("HTTP_REFERER"))
 
 
@@ -434,10 +469,11 @@ class Edit(View):
         elif "default.png" in post.splash.url:
             nosplash = True
 
+        blogs = Blog.objects.filter(author=request.user)
         return render(
             request,
             "edit.html",
-            {"user": request.user, "post": post, "nosplash": nosplash},
+            {"user": request.user, "post": post, "nosplash": nosplash, "blogs": blogs},
         )
 
     def post(self, request, id):
@@ -446,12 +482,27 @@ class Edit(View):
         if not request.user.is_authenticated or request.user != post.author:
             return redirect(f"/{post.author}/post/{id}")
 
+        blogname = request.POST.get("blog")
         title = request.POST.get("title")
         subtitle = request.POST.get("subtitle")
         text = request.POST.get("text")
         splash = request.FILES.get("splash")
         splashdesc = request.POST.get("splashdesc")
         delete = request.POST.get("delete-splash")
+        limit = request.POST.get("limit-comments")
+        nocomment = request.POST.get("no-comments")
+        subonly = request.POST.get("sub-only")
+
+        if not blogname:
+            messages.error(request, "Must select a blog")
+            return redirect(f"/edit/{id}")
+        elif blogname != post.blog:
+            blog = get_object_or_404(Blog, name=blogname)
+            post.blog = blog
+
+        if request.user != blog.author:
+            messages.error(request, "You do not own that blog")
+            return redirect(f"/edit/{id}")
 
         if title != post.title:
             post.title = title
@@ -470,6 +521,21 @@ class Edit(View):
 
         if splashdesc != post.splashdesc:
             post.splashdesc = splashdesc
+
+        if nocomment:
+            post.no_comments = True
+        else:
+            post.no_comments = False
+
+        if limit:
+            post.limit_comments = True
+        else:
+            post.limit_comments = False
+
+        if subonly:
+            post.subonly = True
+        else:
+            post.subonly = False
 
         post.updated = datetime.utcnow()
 
@@ -508,6 +574,164 @@ class Like(View):
         return redirect(f"/{post.author}/post/{id}")
 
 
+class Posts(View):
+    def get(self, request):
+        posts = Post.objects.all().order_by("-views")
+        count = posts.count()
+        return render(
+            request,
+            "posts.html",
+            {"user": request.user, "posts": posts, "count": count},
+        )
+
+
+class Blogs(View):
+    def get(self, request):
+        blogs = Blog.objects.annotate(subscriber_count=Count("subscriber")).order_by(
+            "-subscriber_count"
+        )
+        count = blogs.count()
+        return render(request, "blogs.html", {"blogs": blogs, "count": count})
+
+
+class UserBlog(View):
+    def get(self, request, name):
+        blog = get_object_or_404(Blog, name=name)
+        posts = Post.objects.filter(blog=blog)
+        count = posts.count()
+
+        nosplash = False
+        if blog.splash:
+            if "default.png" in blog.splash.url:
+                nosplash = True
+        else:
+            nosplash = True
+
+        data = {
+            "user": request.user,
+            "blog": blog,
+            "posts": posts,
+            "nosplash": nosplash,
+            "count": count,
+        }
+
+        if request.user.is_authenticated:
+            try:
+                subscriber = Subscriber.objects.get(blog=blog, user=request.user)
+                data["subscriber"] = subscriber
+                data["is_subscribed"] = True
+            except Subscriber.DoesNotExist:
+                data["subscriber"] = None
+                data["is_subscribed"] = False
+
+        data["subscriber_count"] = Subscriber.objects.filter(blog=blog).count()
+        return render(request, "blog.html", data)
+
+
+class BlogAdd(View):
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect("/login")
+
+        return render(request, "blogadd.html", {"user": request.user})
+
+    def post(self, request):
+        if not request.user.is_authenticated:
+            return redirect("/login")
+
+        author = request.user
+        name = request.POST.get("name")
+        about = request.POST.get("about")
+        splash = request.FILES.get("splash")
+        welcome = request.POST.get("welcome")
+
+        if Blog.objects.filter(name=name).exists():
+            messages.error(request, "A blog with that name already exists")
+            return redirect(request.META.get("HTTP_REFERER"))
+
+        if name and about and welcome:
+            blog = Blog.objects.create(
+                author=author,
+                name=name,
+                about=about,
+                date=datetime.utcnow(),
+                welcome=welcome,
+            )
+
+            if splash:
+                blog.splash = splash
+                blog.save()
+
+            return redirect(f"/blog/{blog.name}")
+        else:
+            messages.error(
+                request, "You must provide a Name and About, and welcome message"
+            )
+            return redirect(request.META.get("HTTP_REFERER"))
+
+
+class BlogEdit(View):
+    def get(self, request, name):
+        blog = get_object_or_404(Blog, name=name)
+
+        if not request.user.is_authenticated or request.user != blog.author:
+            return redirect(f"/blog/{name}")
+
+        nosplash = False
+        if not blog.splash:
+            nosplash = True
+        elif "default.png" in blog.splash.url:
+            nosplash = True
+
+        return render(
+            request,
+            "blogedit.html",
+            {"user": request.user, "blog": blog, "nosplash": nosplash},
+        )
+
+    def post(self, request, name):
+        blog = get_object_or_404(Blog, name=name)
+
+        if not request.user.is_authenticated or request.user != blog.author:
+            return redirect(f"/blog/{name}")
+
+        name = request.POST.get("name")
+        about = request.POST.get("about")
+        splash = request.FILES.get("splash")
+        delete = request.POST.get("delete-splash")
+        welcome = request.POST.get("welcome")
+
+        if name and about and welcome:
+            blog.name = name
+            blog.about = about
+            blog.welcome = welcome
+
+            if delete:
+                blog.splash = None
+            elif splash:
+                blog.splash = splash
+
+            blog.save()
+            return redirect(f"/blog/{blog.name}")
+        else:
+            messages.error(
+                request, "You must provide a Name and About, and welcome message"
+            )
+            return redirect(request.META.get("HTTP_REFERER"))
+
+
+class BlogDelete(View):
+    def get(self, request, name):
+        blog = get_object_or_404(Blog, name=name)
+
+        if not request.user.is_authenticated and request.user != blog.author:
+            return redirect("/login")
+
+        blog.delete()
+        messages.success(request, f"Blog {name} has been deleted")
+        return redirect("/user")
+
+
 class BlogPost(View):
     def get(self, request, username, id):
         author = get_object_or_404(User, username=username)
@@ -522,6 +746,16 @@ class BlogPost(View):
         else:
             nosplash = True
 
+        viewable = True
+        if post.subonly:
+            if request.user.is_authenticated:
+                if not Subscriber.objects.filter(
+                    blog=post.blog, user=request.user
+                ).exists():
+                    viewable = False
+            else:
+                viewable = False
+
         post.views += 1
         post.save()
 
@@ -535,14 +769,51 @@ class BlogPost(View):
                 "comments": comments,
                 "count": comments.count(),
                 "tags": tags,
+                "viewable": viewable,
             },
         )
 
 
-class Posts(View):
+class Subscribe(View):
+    def get(self, request, name):
+        if not request.user.is_authenticated:
+            return redirect(request, "/login")
+
+        blog = Blog.objects.get(name=name)
+        sub, new = Subscriber.objects.get_or_create(blog=blog, user=request.user)
+
+        if not new:
+            sub.delete()
+        else:
+            send_subscribe_email(request.user.email, blog)
+
+        return redirect(f"/blog/{blog.name}")
+
+
+class Subnotify(View):
+    def get(self, request, name):
+        if not request.user.is_authenticated:
+            return redirect(request, "/login")
+
+        blog = get_object_or_404(Blog, name=name)
+        sub, new = Subscriber.objects.get_or_create(blog=blog, user=request.user)
+
+        if not new:
+            sub.notify = not sub.notify
+            sub.save()
+
+        return redirect(f"/blog/{blog.name}")
+
+
+class Subscriptions(View):
     def get(self, request):
-        posts = Post.objects.all().order_by("-views")
-        return render(request, "posts.html", {"user": request.user, "posts": posts})
+        if not request.user.is_authenticated:
+            return redirect("/login")
+
+        blogs = Blog.objects.filter(subscriber__user=request.user)
+        count = blogs.count()
+
+        return render(request, "subscriptions.html", {"blogs": blogs, "count": count})
 
 
 class CommentAdd(View):
@@ -554,6 +825,17 @@ class CommentAdd(View):
         post = get_object_or_404(Post, pk=id)
 
         if comment:
+            if post.no_comments:
+                messages.error(request, "Comments are turned off")
+                return redirect(f"/{post.author}/post/{post.id}")
+
+            if post.limit_comments:
+                if not Subscriber.objects.filter(
+                    blog=post.blog, user=request.user
+                ).exists():
+                    messages.error(request, "Only subscribers can comment")
+                    return redirect(f"/{post.author}/post/{post.id}")
+
             Comment.objects.create(
                 text=comment, post=post, user=request.user, date=datetime.utcnow()
             )
@@ -575,27 +857,31 @@ class CommentEdit(View):
     def post(self, request, id):
         text = request.POST.get("comment")
         comment = get_object_or_404(Comment, pk=id)
+        post = comment.post
 
         if not request.user.is_authenticated:
-            return redirect(
-                f"/{comment.post.author}/post/{comment.post.id}#cm{comment.id}"
-            )
+            return redirect(f"/{post.author}/post/{post.id}#cm{comment.id}")
 
         if text:
+            if post.no_comments:
+                messages.error(request, "Comments are turned off")
+                return redirect(f"/{post.author}/post/{post.id}")
+
+            if post.limit_comments:
+                if not Subscriber.objects.filter(
+                    blog=post.blog, user=request.user
+                ).exists():
+                    messages.error(request, "Only subscribers can comment")
+                    return redirect(f"/{post.author}/post/{post.id}")
+
             comment.text = text
             comment.save()
-            return redirect(
-                f"/{comment.post.author}/post/{comment.post.id}#cm{comment.id}"
-            )
+            return redirect(f"/{post.author}/post/{post.id}#cm{comment.id}")
         else:
             messages.error(request, "Must add a comment and rating")
-            return redirect(
-                f"/{comment.post.author}/post/{comment.post.id}#cm{comment.id}"
-            )
+            return redirect(f"/{post.author}/post/{post.id}#cm{comment.id}")
 
-            return redirect(
-                f"/{comment.post.author}/post/{comment.post.id}#cm{comment.id}"
-            )
+            return redirect(f"/{post.author}/post/{post.id}#cm{comment.id}")
 
 
 class CommentDelete(View):
