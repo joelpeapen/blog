@@ -21,7 +21,6 @@
 
         <div class="navbar-end">
             {% if user.is_authenticated %}
-            <a class="navbar-item" href="{% url 'subscriptions' %}">Subscriptions</a>
             <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link">＋</a>
                 <div class="navbar-dropdown">
@@ -34,13 +33,23 @@
                 {% if user.is_authenticated %}
                 <button id="navuser" class="navbar-link">
                     <img class="circlepic" src="/static{{ user.pic.url }}" alt="profile picture">
-                    {{ user.username }}
+                    {{ user }}
                 </button>
                 <div class="navbar-dropdown">
                     <a class="navbar-item has-icons-left" href="{% url "user" %}">
                         <span class="icon is-small is-left">
                             <i class="fas fa-user"></i>
                         </span>Profile
+                    </a>
+                    <a class="navbar-item has-icons-left" href="{% url 'subscriptions' %}">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-user"></i>
+                        </span>Subscriptions
+                    </a>
+                    <a class="navbar-item has-icons-left" href="{% url 'comments' user %}">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-user"></i>
+                        </span>Comments
                     </a>
                     <a class="navbar-item has-icons-left" href="{% url "settings" %}">
                         <span class="icon is-small is-left">

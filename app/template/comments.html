@@ -1,0 +1,47 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Edit Post {% endblock title %}
+
+{% block content %}
+
+<div class="container middle">
+    <h3 class="title is-3">Comments ({{ count }})</h3>
+    <hr>
+    {% for c in comments %}
+    {% if c.viewable %}
+    <a href="{% url 'post' c.post.author c.post.id %}#cm{{ c.id }}">
+        <p class="title is-5">{{ c.post }}</p>
+    </a>
+    <div id="cm{{ c.id }}" class="comment list">
+        <div class="avatar">
+            <a href="{% url 'user' c.user %}">
+                <img class="circlepic" src="/static{{ c.user.pic.url }}" alt="{{ c.user }}'s profile picture">
+            </a>
+        </div>
+        <div class="left">
+            <div class="head">
+                <a href="{% url 'user' c.user %}">{{ c.user }}</a>
+                <span>{{ c.date }}</span>
+                {% if user.is_authenticated and user == c.user %}
+                <form class="comment-delete" action="{% url 'comment-del' c.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="confirm">Delete</button>
+                </form>
+                {% endif %}
+            </div>
+            <div class="content">
+                <p>{{ c.text }}</p>
+                {% if user.is_authenticated %}
+                <form class="comment-like" action="{% url 'comment-like' c.id %}" method="post">
+                    {% csrf_token %}
+                    <a onClick="this.closest('form').submit()">{{ c.likes }} {% if c.likes == 0 or c.likes > 1 %}likes{% else %}like{% endif %}</a>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+
+{% endblock content %}

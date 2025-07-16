@@ -555,6 +555,11 @@ article {
 .comment .left .content {
   padding: 0 30px 0 0;
 }
+.comment.list {
+  margin: 0 0 20px 0;
+  padding: 10px 0 20px 0;
+  border-bottom: 1px solid #3d444d;
+}
 
 .tag-container {
   display: flex;

@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from django.db.models import Count
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.hashers import PBKDF2PasswordHasher
+from django.db.models import BooleanField, Case, Count, Exists, OuterRef, When
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 
@@ -816,6 +816,35 @@ class Subscriptions(View):
         return render(request, "subscriptions.html", {"blogs": blogs, "count": count})
 
 
+class Comments(View):
+    def get(self, request, username):
+        if not request.user.is_authenticated:
+            return redirect("/login")
+
+        user = get_object_or_404(User, username=username)
+
+        subquery = Subscriber.objects.filter(
+            user=request.user, blog=OuterRef("post__blog")
+        )
+
+        comments = Comment.objects.filter(user=user).annotate(
+            viewable=Case(
+                When(post__subonly=True, then=Exists(subquery)),
+                When(post__subonly=False, then=True),
+                output_field=BooleanField(),
+            )
+        )
+
+        return render(
+            request, "comments.html", {
+                "user": request.user,
+                "profile": user,
+                "comments": comments,
+                "count": comments.count()
+            }
+        )
+
+
 class CommentAdd(View):
     def post(self, request, id):
         if not request.user.is_authenticated:
@@ -914,7 +943,7 @@ class CommentLike(View):
             request.user.comment_likes.add(comment)
             comment.save()
 
-        return redirect(f"/{comment.post.author}/post/{comment.post.id}#cm{comment.id}")
+        return redirect(request.META.get("HTTP_REFERER"))
 
 
 class Tags(View):
