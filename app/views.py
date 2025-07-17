@@ -3,7 +3,16 @@ from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.hashers import PBKDF2PasswordHasher
-from django.db.models import Q, BooleanField, Case, Count, Exists, OuterRef, When
+from django.db.models import (
+    Q,
+    BooleanField,
+    Case,
+    Count,
+    Exists,
+    OuterRef,
+    Subquery,
+    When,
+)
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 
@@ -108,8 +117,22 @@ class Logout(View):
 
 class AppUser(View):
     def get(self, request, username=None):
+        subscount = (
+            Subscriber.objects.filter(blog=OuterRef("pk"))
+            .values("blog")
+            .annotate(count=Count("id"))
+            .values("count")
+        )
+
         if username:
             profile = get_object_or_404(User, username=username)
+            blogs = (
+                Blog.objects.filter(author=profile)
+                .annotate(
+                    subscriber_count=Subquery(subscount),
+                )
+                .order_by("-subscriber_count")
+            )
 
             return render(
                 request,
@@ -118,13 +141,27 @@ class AppUser(View):
                     "profile": profile,
                     "user": request.user,
                     "posts": Post.objects.filter(author=profile),
-                    "blogs": Blog.objects.filter(author=profile),
+                    "blogs": blogs,
+                    "count": blogs.count(),
                     "type": "posts",
                 },
             )
 
         # /user/ -> logged-in user's page
         if request.user.is_authenticated:
+            blogs = (
+                Blog.objects.filter(author=request.user)
+                .annotate(
+                    subscriber_count=Subquery(subscount),
+                    is_subscribed=Exists(
+                        Subscriber.objects.filter(
+                            user=request.user, blog=OuterRef("pk")
+                        )
+                    ),
+                )
+                .order_by("-subscriber_count")
+            )
+
             return render(
                 request,
                 "user.html",
@@ -132,7 +169,8 @@ class AppUser(View):
                     "profile": request.user,
                     "user": request.user,
                     "posts": Post.objects.filter(author=request.user),
-                    "blogs": Blog.objects.filter(author=request.user),
+                    "blogs": blogs,
+                    "count": blogs.count(),
                     "type": "posts",
                 },
             )
@@ -590,10 +628,22 @@ class Posts(View):
 
 class Blogs(View):
     def get(self, request):
-        blogs = Blog.objects.annotate(subscriber_count=Count("subscriber")).order_by(
-            "-subscriber_count"
-        )
-        count = blogs.count()
+        if request.user.is_authenticated:
+            blogs = Blog.objects.annotate(
+                subscriber_count=Count("subscriber"),
+                is_subscribed=Exists(
+                    Subscriber.objects.filter(user=request.user, blog=OuterRef("pk"))
+                ),
+            ).order_by("-subscriber_count")
+
+            count = blogs.count()
+        else:
+            blogs = Blog.objects.annotate(
+                subscriber_count=Count("subscriber"),
+            ).order_by("-subscriber_count")
+
+            count = blogs.count()
+
         return render(request, "blogs.html", {"blogs": blogs, "count": count})
 
 
@@ -790,7 +840,7 @@ class Subscribe(View):
         else:
             send_subscribe_email(request.user.email, blog)
 
-        return redirect(f"/blog/{blog.name}")
+        return redirect(request.META.get("HTTP_REFERER"))
 
 
 class Subnotify(View):
@@ -813,7 +863,23 @@ class Subscriptions(View):
         if not request.user.is_authenticated:
             return redirect("/login")
 
-        blogs = Blog.objects.filter(subscriber__user=request.user)
+        subscount = (
+            Subscriber.objects.filter(blog=OuterRef("pk"))
+            .values("blog")
+            .annotate(count=Count("id"))
+            .values("count")
+        )
+
+        blogs = (
+            Blog.objects.filter(subscriber__user=request.user)
+            .annotate(
+                subscriber_count=Subquery(subscount),
+                is_subscribed=Exists(
+                    Subscriber.objects.filter(user=request.user, blog=OuterRef("pk"))
+                ),
+            )
+            .order_by("-subscriber_count")
+        )
         count = blogs.count()
 
         return render(request, "subscriptions.html", {"blogs": blogs, "count": count})
@@ -1029,12 +1095,28 @@ class Search(View):
             if subs:
                 qf &= Q(subscriber__user=request.user)
 
-            blogs = (
-                Blog.objects.filter(qf)
-                .annotate(subscriber_count=Count("subscriber"))
-                .order_by("-subscriber_count")
-                .distinct()
-            )
+            if request.user.is_authenticated:
+                blogs = (
+                    Blog.objects.filter(qf)
+                    .annotate(
+                        subscriber_count=Count("subscriber"),
+                        is_subscribed=Exists(
+                            Subscriber.objects.filter(
+                                user=request.user, blog=OuterRef("pk")
+                            )
+                        ),
+                    )
+                    .order_by("-subscriber_count")
+                    .distinct()
+                )
+            else:
+                blogs = (
+                    Blog.objects.filter(qf)
+                    .annotate(subscriber_count=Count("subscriber"))
+                    .order_by("-subscriber_count")
+                    .distinct()
+                )
+
             data["blogs"] = blogs
             data["count"] = len(blogs)
         elif taip == "posts":
@@ -1058,8 +1140,12 @@ class Search(View):
             data["posts"] = posts
             data["count"] = len(posts)
 
-        data["query"] = query
-        data["username"] = username
-        data["type"] = taip
+        data.update(
+            {
+                "query": query,
+                "username": username,
+                "type": taip,
+            }
+        )
 
         return render(request, "search.html", data)
