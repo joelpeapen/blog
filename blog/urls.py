@@ -44,5 +44,6 @@ urlpatterns = [
     path("comment/like/<int:id>", views.CommentLike.as_view(), name="comment-like"),
     path("tags/<str:name>/", views.Tags.as_view(), name="tags"),
     path("tags/add/<int:id>/", views.TagAdd.as_view(), name="tag-add"),
-    path("tags/delete/<int:pid>/<int:tid>/", views.TagDelete.as_view(), name="tag-delete")
+    path("tags/delete/<int:pid>/<int:tid>/", views.TagDelete.as_view(), name="tag-delete"),
+    path("search/", views.Search.as_view(), name="search")
 ]

@@ -1,0 +1,21 @@
+<div class="searchbar">
+    <form id="searchbar" class="form search" action="{% url 'search' %}" method="get">
+        {% if type and not user %}<input type="hidden" name="type" value="{{ type }}"/>{% endif %}
+        {% if subs %}<input type="hidden" name="subs" value="{{ subs }}"/>{% endif %}
+        <input id="search" name="query" type="text" class="input" placeholder="search..." value="{{ query|default:'' }}"/>
+        {% if user %}
+        <input type="hidden" name="user" value="{{ user }}"/>
+        <div class="field far-right">
+            <div class="control">
+                <div class="select">
+                    <select name="type">
+                        <option value="">--Type--</option>
+                        <option value="blogs" {% if type == "blogs" %}selected{% endif %}>Blogs</option>
+                        <option value="posts" {% if type == "posts" %}selected{% endif %}>Posts</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </form>
+</div>

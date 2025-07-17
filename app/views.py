@@ -3,7 +3,7 @@ from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.hashers import PBKDF2PasswordHasher
-from django.db.models import BooleanField, Case, Count, Exists, OuterRef, When
+from django.db.models import Q, BooleanField, Case, Count, Exists, OuterRef, When
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 
@@ -119,6 +119,7 @@ class AppUser(View):
                     "user": request.user,
                     "posts": Post.objects.filter(author=profile),
                     "blogs": Blog.objects.filter(author=profile),
+                    "type": "posts",
                 },
             )
 
@@ -131,6 +132,8 @@ class AppUser(View):
                     "profile": request.user,
                     "user": request.user,
                     "posts": Post.objects.filter(author=request.user),
+                    "blogs": Blog.objects.filter(author=request.user),
+                    "type": "posts",
                 },
             )
         return redirect("/login")
@@ -836,12 +839,14 @@ class Comments(View):
         )
 
         return render(
-            request, "comments.html", {
+            request,
+            "comments.html",
+            {
                 "user": request.user,
                 "profile": user,
                 "comments": comments,
-                "count": comments.count()
-            }
+                "count": comments.count(),
+            },
         )
 
 
@@ -1000,3 +1005,61 @@ class TagDelete(View):
         post.tags.remove(tag)
 
         return redirect(f"/{post.author}/post/{pid}")
+
+
+class Search(View):
+    def get(self, request):
+        query = request.GET.get("query", None)
+        username = request.GET.get("user", None)
+        taip = request.GET.get("type", None)
+        subs = request.GET.get("subs", None)
+        data = {}
+        qf = Q()
+
+        if taip == "blogs":
+            qf |= Q(name__icontains=query) | Q(about__icontains=query)
+
+            if username:
+                try:
+                    u = User.objects.get(username=username)
+                    qf &= Q(author=u)
+                except User.DoesNotExist:
+                    pass
+
+            if subs:
+                qf &= Q(subscriber__user=request.user)
+
+            blogs = (
+                Blog.objects.filter(qf)
+                .annotate(subscriber_count=Count("subscriber"))
+                .order_by("-subscriber_count")
+                .distinct()
+            )
+            data["blogs"] = blogs
+            data["count"] = len(blogs)
+        elif taip == "posts":
+            qf |= (
+                Q(title__icontains=query)
+                | Q(subtitle__icontains=query)
+                | Q(text__icontains=query)
+            )
+
+            if username:
+                try:
+                    u = User.objects.get(username=username)
+                    qf &= Q(author=u)
+                except User.DoesNotExist:
+                    pass
+
+            if subs:
+                qf &= Q(subscriber__user=request.user)
+
+            posts = Post.objects.filter(qf).order_by("-views")
+            data["posts"] = posts
+            data["count"] = len(posts)
+
+        data["query"] = query
+        data["username"] = username
+        data["type"] = taip
+
+        return render(request, "search.html", data)

@@ -1,0 +1,26 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Search results {% if query %} for {{ query }} {% endif %} {% endblock title %}
+
+{% block content %}
+
+<div class="container middle">
+    <main>
+        <div class="product-bar">
+            <h4 class="title">Search results for {{ query }} ({{ count }})</h4>
+        </div>
+
+        {% include "./components/searchbar.html" with user=username query=query type=type %}
+
+        {% if blogs %}
+        {% include "./components/blogs.html" %}
+        {% endif %}
+
+        {% if posts %}
+        {% include "./components/posts.html" %}
+        {% endif %}
+
+    </main>
+</div>
+
+{% endblock content %}

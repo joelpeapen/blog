@@ -30,6 +30,8 @@
         {% endif %}
     </div>
 
+    {% include "./components/searchbar.html" with user=profile.username query=query %}
+
     {% include 'components/blogs.html' %}
     {% include 'components/posts.html' %}
 
