@@ -1,3 +1,1 @@
-{{ author }} added a new post in {{ blog }}: {{ post.name }}
-
-Read it here: http://localhost:8000/{{ author }}/post/{{ post.id }}
+<a href="http:localhost:8000/user/{{ user }}">{{ author }}</a> added a new post in <a href="http:localhost:8000/blog/{{ blog.name }}">{{ blog.name }}</a>: <a href="http://localhost:8000/{{ author }}/post/{{ post.id }}">{{ post.name }}</a>

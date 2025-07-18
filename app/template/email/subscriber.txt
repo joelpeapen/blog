@@ -1,0 +1,1 @@
+<a href="http:localhost:8000/user/{{ user }}">{{ user }}</a> subscribed to your blog <a href="http:localhost:8000/blog/{{ blog.name }}">{{ blog.name }}</a>

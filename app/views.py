@@ -32,6 +32,7 @@ from app.utils import (
     send_password_email,
     send_post_email,
     send_subscribe_email,
+    send_subscriber_email,
     send_username_email,
 )
 
@@ -838,7 +839,10 @@ class Subscribe(View):
         if not new:
             sub.delete()
         else:
-            send_subscribe_email(request.user.email, blog)
+            send_subscriber_email(request.user.email, blog)
+            notify = Notify.objects.get(user=blog.author)
+            if notify.on_sub:
+                send_subscribe_email(blog.author.email, request.user, blog)
 
         return redirect(request.META.get("HTTP_REFERER"))
 

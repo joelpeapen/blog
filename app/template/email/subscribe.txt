@@ -1,5 +1,5 @@
-You subscribed to {{ author }}'s blog at http://localhost:8000/blog/{{ blog.name }}
+You subscribed to <a href="http:localhost:8000/user/{{ user }}">{{ blog.author }}'s</a> blog <a href="http:localhost:8000/blog/{{ blog.name }}">{{ blog.name }}</a>
 
-A message from the {{ author }}:
+A message from <strong>{{ blog.author }}</strong>:
 
-{{ welcome }}
+{{ blog.welcome }}

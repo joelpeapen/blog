@@ -46,11 +46,9 @@ def send_username_email(email, username):
 
 
 def send_password_email(email, token_id):
-    data = {
-        "token_id": str(token_id),
-        "email": email,
-    }
-    message = get_template("email/password.txt").render(data)
+    message = get_template("email/password.txt").render(
+        {"token_id": str(token_id), "email": email}
+    )
     send_mail(
         subject="Your Blog++ password recovery",
         message=message,
@@ -60,13 +58,19 @@ def send_password_email(email, token_id):
     )
 
 
-def send_subscribe_email(email, blog):
-    data = {
-        "blog": blog,
-        "author": blog.author,
-        "welcome": blog.welcome
-    }
-    message = get_template("email/subscribe.txt").render(data)
+def send_subscribe_email(email, user, blog):
+    message = get_template("email/subscriber.txt").render({"user": user, "blog": blog})
+    send_mail(
+        subject="Blog++: New Subscriber",
+        message=message,
+        from_email="admin@app.com",
+        recipient_list=[email],
+        fail_silently=True,
+    )
+
+
+def send_subscriber_email(email, blog):
+    message = get_template("email/subscribe.txt").render({"blog": blog})
     send_mail(
         subject="Blog++: New Subscription",
         message=message,
