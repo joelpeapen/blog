@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Edit Post {% endblock title %}
+{% block title %} Comments {% endblock title %}
 
 {% block content %}
 
@@ -30,7 +30,7 @@
                 {% endif %}
             </div>
             <div class="content">
-                <p>{{ c.text }}</p>
+                <p>{{ c.text | markdown | safe }}</p>
                 {% if user.is_authenticated %}
                 <form class="comment-like" action="{% url 'comment-like' c.id %}" method="post">
                     {% csrf_token %}

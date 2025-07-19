@@ -7,7 +7,7 @@
     <section class="middle">
         <div class="post">
             <div class="heading">
-                <h1 class="title">{{ post.title }}</h1>
+                <h1 class="title">{{ post.title | markdown | safe }}</h1>
                 <p class="subtitle">{{ post.subtitle }}</p>
                 <p>in <a href="{% url 'blog' post.blog.name %}">{{ post.blog }}</a></p>
 
@@ -70,10 +70,10 @@
             </div>
 
             <article>
-                {% if not viewable %}
-                SUBSCRIBE TO THE BLOG TO READ THIS POST
+                {% if viewable %}
+                {{ post.text | markdown | safe }}
                 {% else %}
-                {{ post.text }}
+                SUBSCRIBE TO THE BLOG TO READ THIS POST
                 {% endif %}
             </article>
         </div>
@@ -121,7 +121,7 @@
                 <div class="media-content">
                     <div class="field">
                         <p class="control">
-                            <textarea id="comment" name="comment" rows=4 placeholder="Add a comment" maxlength=250></textarea>
+                            <textarea id="comment" name="comment" rows=4 placeholder="Add a comment (markdown available)" maxlength=250></textarea>
                         </p>
                         <p id="comment-limit"></p>
                     </div>
@@ -157,8 +157,8 @@
                     {% endif %}
                 </div>
                 <div class="content">
+                    <p id="user-comment-{{ comment.id }}">{{ comment.text | markdown | safe }}</p>
                     {% if user.is_authenticated and user == comment.user %}
-                    <p id="user-comment-{{ comment.id }}">{{ comment.text }}</p>
                     <form class="form comment-form-edit" id="comment-form-edit-{{ comment.id }}" action="{% url 'comment-edit' comment.id %}" method="post">
                         {% csrf_token %}
                         <div class="media">
@@ -176,8 +176,6 @@
                             </div>
                         </div>
                     </form>
-                    {% else %}
-                    <p>{{ comment.text }}</p>
                     {% endif %}
                     {% if user.is_authenticated %}
                     <form class="comment-like" action="{% url 'comment-like' comment.id %}" method="post">

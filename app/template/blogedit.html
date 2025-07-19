@@ -10,7 +10,7 @@
             {% csrf_token %}
 
             <div class="field">
-                <label class="label" for="name">Name*</label>
+                <label class="label" for="name">Name* (markdown available)</label>
                 <div class="control">
                     <input id="name" type="text" name="name" maxlength=75 value="{{ blog.name }}" required>
                 </div>
@@ -18,7 +18,7 @@
             </div>
 
             <div class="field">
-                <label class="label" for="about">About*</label>
+                <label class="label" for="about">About* (markdown available)</label>
                 <div class="control">
                     <textarea name="about" rows=4 cols=24 required>{{ blog.about }}</textarea>
                 </div>

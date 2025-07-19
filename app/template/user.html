@@ -15,7 +15,7 @@
         <div class="">
             {% if profile.bio %}
             <p>Bio</p>
-            <p>{{ profile.bio }}</p>
+            <p>{{ profile.bio | markdown | safe }}</p>
             {% endif %}
         </div>
 
