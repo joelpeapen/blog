@@ -616,6 +616,19 @@ class Like(View):
         return redirect(f"/{post.author}/post/{id}")
 
 
+class Likes(View):
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect("/login")
+
+        posts = request.user.likes.all()
+        return render(
+            request,
+            "likes.html",
+            {"user": request.user, "posts": posts, "count": posts.count()},
+        )
+
+
 class Posts(View):
     def get(self, request):
         posts = Post.objects.all().order_by("-views")
@@ -1082,7 +1095,7 @@ class Search(View):
         query = request.GET.get("query", None)
         username = request.GET.get("user", None)
         taip = request.GET.get("type", None)
-        subs = request.GET.get("subs", None)
+        filter = request.GET.get("filter", None)
         data = {}
         qf = Q()
 
@@ -1096,8 +1109,10 @@ class Search(View):
                 except User.DoesNotExist:
                     pass
 
-            if subs:
+            if filter == "subs":
                 qf &= Q(subscriber__user=request.user)
+            elif filter == "likes":
+                qf &= Q(id__in=request.user.likes.values_list('id', flat=True))
 
             if request.user.is_authenticated:
                 blogs = (
@@ -1137,8 +1152,10 @@ class Search(View):
                 except User.DoesNotExist:
                     pass
 
-            if subs:
+            if filter == "subs":
                 qf &= Q(subscriber__user=request.user)
+            elif filter == "likes":
+                qf &= Q(id__in=request.user.likes.values_list('id', flat=True))
 
             posts = Post.objects.filter(qf).order_by("-views")
             data["posts"] = posts

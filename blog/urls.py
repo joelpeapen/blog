@@ -37,6 +37,7 @@ urlpatterns = [
     path("edit/<int:id>", views.Edit.as_view(), name="edit"),
     path("delete/<int:id>", views.Delete.as_view(), name="delete"),
     path("like/<int:id>", views.Like.as_view(), name="like"),
+    path("likes/", views.Likes.as_view(), name="likes"),
     path("<str:username>/comments/", views.Comments.as_view(), name="comments"),
     path("comment/<int:id>", views.CommentAdd.as_view(), name="comment-add"),
     path("comment/edit/<int:id>", views.CommentEdit.as_view(), name="comment-edit"),

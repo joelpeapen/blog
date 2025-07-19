@@ -1,7 +1,8 @@
 <div class="searchbar">
     <form id="searchbar" class="form search" action="{% url 'search' %}" method="get">
         {% if type and not user %}<input type="hidden" name="type" value="{{ type }}"/>{% endif %}
-        {% if subs %}<input type="hidden" name="subs" value="{{ subs }}"/>{% endif %}
+        {% if filter == "subs" %}<input type="hidden" name="filter" value="subs"/>{% endif %}
+        {% if filter == "likes" %}<input type="hidden" name="filter" value="likes"/>{% endif %}
         <input id="search" name="query" type="text" class="input" placeholder="search..." value="{{ query|default:'' }}"/>
         {% if user %}
         <input type="hidden" name="user" value="{{ user }}"/>

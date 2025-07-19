@@ -1,0 +1,15 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Likes {% endblock title %}
+
+{% block content %}
+
+    <section class="container middle">
+        <h3 class="title is-3">Likes ({{ count }})</h3>
+
+        {% include "./components/searchbar.html" with user=None type="posts" filter="likes" %}
+
+        {% include 'components/posts.html' %}
+    </section>
+
+{% endblock content %}

@@ -7,7 +7,7 @@
     <section class="container middle">
         <h3 class="title is-3">Subscriptions ({{ count }})</h3>
 
-        {% include "./components/searchbar.html" with user=None type="blogs" subs=True %}
+        {% include "./components/searchbar.html" with user=None type="blogs" filter="subs" %}
 
         {% include 'components/blogs.html' %}
     </section>
