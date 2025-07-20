@@ -141,7 +141,7 @@ class AppUser(View):
                 {
                     "profile": profile,
                     "user": request.user,
-                    "posts": Post.objects.filter(author=profile),
+                    "posts": Post.objects.filter(author=profile).order_by("-date"),
                     "blogs": blogs,
                     "count": blogs.count(),
                     "type": "posts",
@@ -169,7 +169,7 @@ class AppUser(View):
                 {
                     "profile": request.user,
                     "user": request.user,
-                    "posts": Post.objects.filter(author=request.user),
+                    "posts": Post.objects.filter(author=request.user).order_by("-date"),
                     "blogs": blogs,
                     "count": blogs.count(),
                     "type": "posts",
@@ -631,7 +631,7 @@ class Likes(View):
 
 class Posts(View):
     def get(self, request):
-        posts = Post.objects.all().order_by("-views")
+        posts = Post.objects.all().order_by("-date")
         count = posts.count()
         return render(
             request,
@@ -1096,6 +1096,7 @@ class Search(View):
         username = request.GET.get("user", None)
         taip = request.GET.get("type", None)
         filter = request.GET.get("filter", None)
+        blog = request.GET.get("blog", None)
         data = {}
         qf = Q()
 
@@ -1112,7 +1113,7 @@ class Search(View):
             if filter == "subs":
                 qf &= Q(subscriber__user=request.user)
             elif filter == "likes":
-                qf &= Q(id__in=request.user.likes.values_list('id', flat=True))
+                qf &= Q(id__in=request.user.likes.values_list("id", flat=True))
 
             if request.user.is_authenticated:
                 blogs = (
@@ -1152,10 +1153,13 @@ class Search(View):
                 except User.DoesNotExist:
                     pass
 
+            if blog:
+                qf &= Q(blog__name=blog)
+
             if filter == "subs":
                 qf &= Q(subscriber__user=request.user)
             elif filter == "likes":
-                qf &= Q(id__in=request.user.likes.values_list('id', flat=True))
+                qf &= Q(id__in=request.user.likes.values_list("id", flat=True))
 
             posts = Post.objects.filter(qf).order_by("-views")
             data["posts"] = posts

@@ -3,6 +3,7 @@
         {% if type and not user %}<input type="hidden" name="type" value="{{ type }}"/>{% endif %}
         {% if filter == "subs" %}<input type="hidden" name="filter" value="subs"/>{% endif %}
         {% if filter == "likes" %}<input type="hidden" name="filter" value="likes"/>{% endif %}
+        {% if blog %}<input type="hidden" name="blog" value="{{ blog }}"/>{% endif %}
         <input id="search" name="query" type="text" class="input" placeholder="search..." value="{{ query|default:'' }}"/>
         {% if user %}
         <input type="hidden" name="user" value="{{ user }}"/>

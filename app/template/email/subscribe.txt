@@ -1,4 +1,4 @@
-You subscribed to <a href="http:localhost:8000/user/{{ user }}">{{ blog.author }}'s</a> blog <a href="http:localhost:8000/blog/{{ blog.name }}">{{ blog.name }}</a>
+You subscribed to <a href="http:localhost:8000/user/{{ blog.author }}">{{ blog.author }}'s</a> blog <a href="http:localhost:8000/blog/{{ blog.name }}">{{ blog.name }}</a>
 
 A message from <strong>{{ blog.author }}</strong>:
 

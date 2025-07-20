@@ -9,7 +9,7 @@
             <div class="heading">
                 <h1 class="title">{{ post.title | markdown | safe }}</h1>
                 <p class="subtitle">{{ post.subtitle }}</p>
-                <p>in <a href="{% url 'blog' post.blog.name %}">{{ post.blog }}</a></p>
+                <p>in <a href="{% url 'blog' post.blog %}">{{ post.blog }}</a></p>
 
                 {% if user.is_authenticated and user == post.author %}
                 <div id="postaction">

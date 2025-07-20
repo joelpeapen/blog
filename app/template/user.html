@@ -22,17 +22,20 @@
         <p><em>joined on {{ profile.date_joined|date:"M d Y \a\t H:i" }}</em></p>
     </aside>
 
-    <div class="">
-        {% if user.is_authenticated and user == profile %}
-        <h3>Your Posts</h3>
-        {% else %}
-        <h3>{{ profile.username }}'s Posts</h3>
-        {% endif %}
+    <section class="container middle">
+        {% include "./components/searchbar.html" with user=profile.username query=query %}
+    </section>
+
+    <section class="container middle">
+        <h3 class="title is-3">Blogs ({{ count }})</h3>
+
+        {% include 'components/blogs.html' %}
+    </section>
+
+    <section class="container middle">
+        <h3 class="title is-3">Posts ({{ count }})</h3>
+
+        {% include 'components/posts.html' %}
     </div>
-
-    {% include "./components/searchbar.html" with user=profile.username query=query %}
-
-    {% include 'components/blogs.html' %}
-    {% include 'components/posts.html' %}
 
 {% endblock content %}

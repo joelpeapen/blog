@@ -9,12 +9,6 @@
             <h3 class="title">{{ blog.name | markdown | safe }}</h3>
             <p class="subtitle">{{ blog.about }}</p>
 
-            {% if not nosplash %}
-            <figure class="splash">
-                <img src="/static{{ blog.splash.url }}" alt="blog image">
-            </figure>
-            {% endif %}
-
             <div class="author">
                 <div class="avatar">
                     <a href="{% url 'user' blog.author %}">
@@ -26,6 +20,12 @@
                     <p>{{ blog.date }}</p>
                 </div>
             </div>
+
+            {% if not nosplash %}
+            <figure class="splash">
+                <img src="/static{{ blog.splash.url }}" alt="blog image">
+            </figure>
+            {% endif %}
         </div>
 
         {% if user.is_authenticated and user == blog.author %}
@@ -53,8 +53,10 @@
         {% endif %}
     </section>
 
-    <section class="container">
+    <section class="container middle">
         <h3 class="title is-3">Posts ({{ count }})</h3>
+
+        {% include "./components/searchbar.html" with user=None type="posts" blog=blog %}
 
         {% include 'components/posts.html' %}
     </section>
