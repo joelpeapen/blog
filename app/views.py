@@ -87,6 +87,7 @@ class Login(View):
     def post(self, request):
         username = request.POST.get("username")
         password = request.POST.get("password")
+        ret = request.GET.get("return")
 
         if username and password:
             if not User.objects.filter(username=username).exists():
@@ -97,6 +98,8 @@ class Login(View):
             if user:
                 if user.is_email_confirmed:
                     login(request, user)
+                    if ret:
+                        return redirect(ret)
                     return redirect("/user")
                 else:
                     return render(request, "email_confirm.html", {"user": user})

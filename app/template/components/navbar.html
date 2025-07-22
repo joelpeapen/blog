@@ -61,14 +61,14 @@
                             <i class="fas fa-cog"></i>
                         </span>Settings
                     </a>
-                    <a class="navbar-item has-icons-left" href="{% url "logout" %}">
+                    <a class="navbar-item has-icons-left" href="{% url "logout" %}?return={{ request.path }}">
                         <span class="icon is-small is-left">
                             <i class="fas fa-sign-out-alt"></i>
                         </span>Log out
                     </a>
                 </div>
                 {% else %}
-                <a class="navbar-link is-arrowless" href="{% url "login" %}">Login</a>
+                <a class="navbar-link is-arrowless" href="{% url "login" %}?return={{ request.path }}">Login</a>
                 {% endif %}
             </div>
         </div>

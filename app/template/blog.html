@@ -39,18 +39,22 @@
         </div>
         {% endif %}
 
-        {% if user.is_authenticated %}
         <div class="subscribe">
             <div id="subscribe" class="field">
                 <p class="control">
+                    {% if user.is_authenticated %}
                     <a href="{% url 'subscribe' blog.name %}" class="button is-success is-dark">{% if is_subscribed == False %}Subscribe{% else %}Unsubscribe{% endif %} ({{subscriber_count}})</a>
+                    {% else %}
+                    <a href="{% url 'login' %}?return={{request.path}}" class="button is-success is-dark">Subscribe ({{subscriber_count|default:0}})</a>
+                    {% endif %}
                 </p>
             </div>
+            {% if user.is_authenticated %}
             <div class="pill circle notify">
                 <a href="{% url 'subnotify' blog.name %}">{% if subscriber.notify %}YES{% else %}NO{% endif %}</a>
             </div>
+            {% endif %}
         </div>
-        {% endif %}
     </section>
 
     <section class="container middle">
