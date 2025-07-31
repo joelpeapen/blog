@@ -1,36 +1,42 @@
 <div class="container blogs">
     {% for b in blogs %}
-    <div class="card">
-        <div class="card-image">
-            <a href="{%  url 'blog' b.name %}">
-                <figure class="image">
-                    <img src="{% if b.splash %}/static{{ b.splash.url }}{% endif %}">
-                </figure>
-            </a>
-        </div>
+    <div class="kard blog">
+        <a href="{%  url 'blog' b %}">
+            <figure class="image">
+                <img src="{% if b.splash %}/static{{ b.splash.url }}{% endif %}">
+            </figure>
+        </a>
 
-        <div class="subscribe">
-            <div id="subscribe" class="field">
-                <p class="control">
-                    {% if user.is_authenticated %}
-                    <a href="{% url 'subscribe' b %}" class="button is-success is-dark">{% if b.is_subscribed == False %}Subscribe{% else %}Unsubscribe{% endif %} ({{b.subscriber_count|default:0}})</a>
-                    {% else %}
-                    <a href="{% url 'login' %}?return={{request.path}}" class="button is-success is-dark">Subscribe ({{b.subscriber_count|default:0}})</a>
-                    {% endif %}
-                </p>
+        <div>
+            <div class="content">
+                <a href="{%  url 'blog' b %}">
+                    <p class="title is-4">{{ b }}</p>
+                    <p class="subtitle">{{ b.about }}</p>
+                </a>
             </div>
-        </div>
 
-            <div class="media">
-                <div class="media-left">
-                    <figure class="image is-48x48">
-                        <img class="circlepic" src="/static{{ b.author.pic.url }}" alt="profile picture">
-                    </figure>
+            <div class="subscribe">
+                <div id="subscribe" class="field">
+                    <p class="control">
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'subscribe' b %}" class="button is-success is-dark">{% if b.is_subscribed == False %}Subscribe{% else %}Unsubscribe{% endif %} ({{b.subscriber_count|default:0}})</a>
+                        {% else %}
+                        <a href="{% url 'login' %}?return={{request.path}}" class="button is-success is-dark">Subscribe ({{b.subscriber_count|default:0}})</a>
+                        {% endif %}
+                    </p>
                 </div>
-                <div class="media-content">
+            </div>
+
+            <div class="author">
+                <div class="avatar">
+                    <a href="{% url 'user' b.author %}">
+                        <img class="is-48x48 circlepic" src="/static{{ b.author.pic.url }}">
+                    </a>
+                </div>
+                <div class="name">
                     <a href="{% url 'user' b.author %}">{{ b.author }}</a>
-                    {{ b.date }}
                 </div>
+                {{ b.date|date:"M d Y" }}
             </div>
         </div>
     </div>

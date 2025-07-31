@@ -24,8 +24,18 @@
             <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link">＋</a>
                 <div class="navbar-dropdown">
-                    <a class="navbar-item" href="/add">Add Post</a>
-                    <a class="navbar-item" href="/blog/add">Add Blog</a>
+                    <a class="navbar-item has-icons-left" href="/add">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-newspaper"></i>
+                        </span>
+                        Post
+                    </a>
+                    <a class="navbar-item has-icons-left" href="/blog/add">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-rss"></i>
+                        </span>
+                        Blog
+                    </a>
                 </div>
             </div>
             {% endif %}
@@ -39,32 +49,38 @@
                     <a class="navbar-item has-icons-left" href="{% url "user" %}">
                         <span class="icon is-small is-left">
                             <i class="fas fa-user"></i>
-                        </span>Profile
+                        </span>
+                        Profile
                     </a>
                     <a class="navbar-item has-icons-left" href="{% url 'subscriptions' %}">
                         <span class="icon is-small is-left">
-                            <i class="fas fa-user"></i>
-                        </span>Subscriptions
+                            <i class="fas fa-rss"></i>
+                        </span>
+                        Subscriptions
                     </a>
                     <a class="navbar-item has-icons-left" href="{% url 'likes' %}">
                         <span class="icon is-small is-left">
-                            <i class="fas fa-user"></i>
-                        </span>Likes
+                            <i class="fas fa-heart"></i>
+                        </span>
+                        Likes
                     </a>
                     <a class="navbar-item has-icons-left" href="{% url 'comments' user %}">
                         <span class="icon is-small is-left">
-                            <i class="fas fa-user"></i>
-                        </span>Comments
+                            <i class="fas fa-comment"></i>
+                        </span>
+                        Comments
                     </a>
                     <a class="navbar-item has-icons-left" href="{% url "settings" %}">
                         <span class="icon is-small is-left">
                             <i class="fas fa-cog"></i>
-                        </span>Settings
+                        </span>
+                        Settings
                     </a>
                     <a class="navbar-item has-icons-left" href="{% url "logout" %}?return={{ request.path }}">
                         <span class="icon is-small is-left">
                             <i class="fas fa-sign-out-alt"></i>
-                        </span>Log out
+                        </span>
+                        Log out
                     </a>
                 </div>
                 {% else %}

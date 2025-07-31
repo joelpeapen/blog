@@ -4,38 +4,35 @@
 
 {% block content %}
 
-    <aside class="">
-        <img class="circlepic" src="/static{{ profile.pic.url }}" alt="profile picture">
-        <h3>{{ profile.username }}</h3>
-        <p id="flname">
-        {% if profile.first_name %} {{ profile.first_name }} {% endif %}
-        {% if profile.last_name %} {{ profile.last_name }} {% endif %}
-            <a href="mailto:{{ profile.email }}">Contact</a>
-        </p>
-        <div class="">
+    <section class="container middle">
+        <div class="author name">
+            <div class="avatar">
+                <img class="user circlepic" src="/static{{ profile.pic.url }}" alt="profile picture">
+                <div>
+                    <h1>{{ profile.username }}</h1>
+                    <h2>{% if profile.first_name %}{{ profile.first_name }} {% endif %} {% if profile.last_name %}{{ profile.last_name }}{% endif %}</h2>
+                </div>
+            </div>
+        </div>
+        <div>
             {% if profile.bio %}
-            <p>Bio</p>
-            <p>{{ profile.bio | markdown | safe }}</p>
+            <div id="bio">
+                {{ profile.bio | markdown | safe }}
+            </div>
             {% endif %}
+
+            <p id="joined"><em>joined on {{ profile.date_joined|date:"M d Y \a\t H:i" }}</em></p>
         </div>
 
-        <p><em>joined on {{ profile.date_joined|date:"M d Y \a\t H:i" }}</em></p>
-    </aside>
-
-    <section class="container middle">
         {% include "./components/searchbar.html" with user=profile.username query=query %}
-    </section>
 
-    <section class="container middle">
-        <h3 class="title is-3">Blogs ({{ count }})</h3>
-
+        <h3 class="title is-3">Blogs ({{ blogcount }})</h3>
         {% include 'components/blogs.html' %}
-    </section>
 
-    <section class="container middle">
-        <h3 class="title is-3">Posts ({{ count }})</h3>
+        <br><br><br>
 
+        <h3 class="title is-3">Posts ({{ postcount }})</h3>
         {% include 'components/posts.html' %}
-    </div>
+    </section>
 
 {% endblock content %}

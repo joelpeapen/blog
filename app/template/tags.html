@@ -4,12 +4,15 @@
 
 {% block content %}
 
-    <h3 class="title is-4">Tag: {{ tag }} ({{ count }})</h3>
+<div class="container middle">
+    <main>
+        <h3 class="title is-4">Tag: {{ tag }} ({{ count }})</h3>
 
-    {% if posts %}
-    {% include 'components/posts.html' %}
-    {% endif %}
+        {% if posts %}
+        {% include "./components/posts.html" %}
+        {% endif %}
 
+    </main>
 </div>
 
 {% endblock content %}

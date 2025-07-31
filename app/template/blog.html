@@ -15,7 +15,7 @@
                         <img class="circlepic" src="/static{{ blog.author.pic.url }}" alt="profile picture">
                     </a>
                 </div>
-                <div>
+                <div class="name">
                     <a href="{% url 'user' blog.author %}">{{ blog.author }}</a>
                     <p>{{ blog.date }}</p>
                 </div>
@@ -30,16 +30,20 @@
 
         {% if user.is_authenticated and user == blog.author %}
         <div id="blogaction">
-            <div class="pill circle edit">
-                <a href="{% url 'blog-edit' blog.name %}">Edit</a>
-            </div>
-            <div class="pill circle del">
-                <a class="confirm" href="{% url 'blog-del' blog.name %}">Del</a>
-            </div>
+            <a href="{% url 'blog-edit' blog.name %}">
+                <div class="pill circle edit">
+                    <span class="icon is-small"><i class="fas fa-edit"></i></span>
+                </div>
+            </a>
+            <a class="confirm" href="{% url 'blog-del' blog.name %}">
+                <div class="pill circle del">
+                    <span class="icon is-small"><i class="fas fa-trash"></i></span>
+                </div>
+            </a>
         </div>
         {% endif %}
 
-        <div class="subscribe">
+        <div class="subscribe mb-5">
             <div id="subscribe" class="field">
                 <p class="control">
                     {% if user.is_authenticated %}
@@ -50,9 +54,15 @@
                 </p>
             </div>
             {% if user.is_authenticated %}
-            <div class="pill circle notify">
-                <a href="{% url 'subnotify' blog.name %}">{% if subscriber.notify %}YES{% else %}NO{% endif %}</a>
-            </div>
+            <a href="{% url 'subnotify' blog.name %}">
+                <div class="pill circle notify" style="width: 40px; height: 40px;">
+                    {% if subscriber.notify %}
+                    <span class="icon is-small"><i class="fas fa-bell"></i></span>
+                    {% else %}
+                    <span class="icon is-small"><i class="fas fa-bell-slash"></i></span>
+                    {% endif %}
+                </div>
+            </a>
             {% endif %}
         </div>
     </section>

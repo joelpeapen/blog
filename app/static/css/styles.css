@@ -199,12 +199,6 @@ nav.navbar {
   margin: 0 0 10px 0;
 }
 
-.forms {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
 .form {
   padding: 1.2rem;
   border-radius: 0.5rem;
@@ -297,21 +291,26 @@ nav.navbar {
 .middle {
   max-width: 65%;
   overflow-wrap: break-word;
-  width: 70%;
+  width: 60%;
   margin: 0 auto !important;
 }
 
-.posts,
 .blogs {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.posts {
+  display: grid;
+  grid-template-rows: repeat(auto-fit, minmax(200px, 1fr));
   gap: 20px;
 }
 
 .subscribe {
   display: flex;
   justify-content: flex-start;
-  margin: 0 0 15px 0;
+  margin: 0 0 0 0;
   gap: 10px;
 }
 .subscribe #subscribe {
@@ -321,6 +320,81 @@ nav.navbar {
   width: 100%;
 }
 
+.kard {
+  display: flex;
+  padding: 15px;
+  border-radius: 1em;
+  background-color: #262626;
+}
+.kard:hover {
+  background-color: #2f2f2f;
+}
+.kard #blogname {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 0 0 10px 0;
+}
+.kard span {
+  color: #9198a1;
+}
+.kard .splash {
+  max-width: 3rem;
+  margin: 0;
+}
+.kard .author {
+  margin: auto 0 0 0;
+}
+.kard .author img {
+  max-width: 2em !important;
+}
+.kard .data {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.kard .content {
+  margin: 10px 0 10px 0;
+}
+.kard .img {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+.kard .img span {
+  margin: 0 0 10px 0;
+}
+.kard .image {
+  max-width: 250px;
+}
+.kard .image img {
+  max-height: 300px;
+  object-fit: cover;
+}
+
+.kard.blog {
+  flex-flow: column wrap;
+  justify-content: space-between;
+  padding: 0;
+}
+.kard.blog > :not(:first-child) {
+  padding: 0 15px;
+}
+.kard.blog .author {
+  margin: 10px 0 0 0;
+  padding-bottom: 15px;
+}
+.kard.blog .image {
+  max-width: 100%;
+}
+.kard.blog .image img {
+  border-top-left-radius: 1em;
+  border-top-right-radius: 1em;
+}
+.kard.blog .media {
+  margin: 10px 0 0 0;
+}
+
 .post .heading {
   position: relative;
 }
@@ -328,35 +402,52 @@ nav.navbar {
   margin: 10px 0;
   font-style: italic;
 }
-.post {
-  width: 100%;
+
+.avatar {
+  display: flex;
+  align-items: center;
+}
+.avatar img {
+  max-width: 3rem;
+}
+.avatar img.user {
+  max-width: 6rem;
+  margin: 0 10px 0 0;
 }
 
 .author {
   display: flex;
   gap: 1em;
   margin: 20px 0 20px 0;
-}
-.author .avatar {
-  display: flex;
   align-items: center;
 }
-.author .avatar img {
-  max-width: 50px;
-}
-.author div:nth-of-type(2) {
-  display: flex;
-  flex-direction: column;
-}
-.author div:nth-of-type(2) p {
-  font-size: 13px;
-}
-.author div:nth-of-type(3) {
+.author .action {
   display: flex;
 }
 
-.card .author {
-  margin: 20px 0 0 0;
+.author.name {
+  display: flex;
+}
+.author.name .avatar {
+  align-items: flex-start;
+  gap: 10px;
+}
+.author.name h1 {
+  color: #ffffff;
+  font-size: 45px !important;
+  margin: 0 0 5px 0;
+}
+.author.name h2 {
+  color: #9198a1;
+}
+
+#bio > * {
+  margin: 10px 0 10px 0;
+  font-size: 25px !important;
+}
+
+#joined {
+  margin: 0 0 2rem 0;
 }
 
 .meta {
@@ -371,11 +462,13 @@ nav.navbar {
 }
 
 .pill {
-  display: inline-block;
   border-radius: 20px;
   border: 1px solid #3d444d;
   padding: 0.5em;
   background-color: #262626;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 .pill:hover {
   background-color: #181818 !important;
@@ -384,13 +477,37 @@ nav.navbar {
   color: #9198a1;
 }
 .pill.circle {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border-radius: 50% !important;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 0;
+}
+.pill.grey {
+  color: #abb1bf;
+}
+.pill.notify {
+  border: 2px solid #4cca51;
+}
+.pill.notify a,
+.pill.notify span {
+  color: #4cca51 !important;
+}
+.pill.edit {
+  border: 2px solid #fabd2f;
+}
+.pill.edit a,
+.pill.edit span {
+  color: #fabd2f !important;
+}
+.pill.del {
+  border: 2px solid #ff4343;
+}
+.pill.del a,
+.pill.del span {
+  color: #ff4343 !important;
 }
 
 .pill#like,
@@ -414,27 +531,6 @@ nav.navbar {
   font-size: 15px;
   text-align: center;
   z-index: 1000;
-}
-
-.notify {
-  border: 2px solid #4cca51;
-}
-.notify a {
-  color: #4cca51 !important;
-}
-
-.edit {
-  border: 2px solid #fabd2f;
-}
-.edit a {
-  color: #fabd2f !important;
-}
-
-.del {
-  border: 2px solid #ff4343;
-}
-.del a {
-  color: #ff4343 !important;
 }
 
 #postaction,
@@ -464,7 +560,8 @@ figcaption {
   margin: 10px 0 0 0;
 }
 
-article {
+article,
+.comment {
   font-size: 25px;
 }
 article h1,
@@ -472,56 +569,79 @@ article h2,
 article h3,
 article h4,
 article h5,
-article h6 {
+article h6,
+.comment h1,
+.comment h2,
+.comment h3,
+.comment h4,
+.comment h5,
+.comment h6 {
   margin: 10px 0;
   font-weight: bold;
   color: #ffffff;
 }
-article h1 {
+article h1,
+.comment h1 {
   font-size: 3rem;
 }
-article h2 {
+article h2,
+.comment h2 {
   font-size: 2.5rem;
 }
-article h3 {
+article h3,
+.comment h3 {
   font-size: 2rem;
 }
-article h4 {
+article h4,
+.comment h4 {
   font-size: 1.5rem;
 }
-article h5 {
+article h5,
+.comment h5 {
   font-size: 1.25rem;
 }
-article h6 {
+article h6,
+.comment h6 {
   font-size: 1rem;
 }
-article hr {
+article hr,
+.comment hr {
   height: 0.3rem;
 }
-article p {
+article p,
+.comment p {
   font-family: Helvetica;
 }
-article ul, article ol {
+article ul,
+article ol,
+.comment ul,
+.comment ol {
   margin: 0 0 0 20px;
 }
-article ul {
+article ul,
+.comment ul {
   list-style: unset;
 }
-article blockquote {
+article blockquote,
+.comment blockquote {
   margin: 15px 0;
   padding: 10px 0 10px 20px;
   border-left: 5px solid #3d444d;
 }
-article code {
+article code,
+.comment code {
   font-size: 20px;
 }
-article pre {
+article pre,
+.comment pre {
   margin: 20px 0;
 }
-article img {
+article img,
+.comment img {
   margin: auto;
 }
-article figcaption {
+article figcaption,
+.comment figcaption {
   font-size: 20px;
   font-weight: 300;
   font-style: italic;
@@ -599,8 +719,11 @@ article figcaption {
 .comment {
   display: flex;
 }
+.comment p {
+  margin: 0 !important;
+}
 .comment .avatar {
-  margin: 20px 10px 0 0;
+  margin: 0px 10px 0 0;
 }
 .comment .avatar img {
   max-width: 50px;
@@ -608,7 +731,6 @@ article figcaption {
 .comment .left {
   display: flex;
   flex-direction: column;
-  border-left: 3px solid #3d444d;
   margin: 20px 0 0 0;
   padding: 0 0 0 10px;
   width: 100%;
@@ -728,7 +850,7 @@ article figcaption {
 }
 .searchbar form {
   width: 100%;
-  padding: 1.2rem 8px;
+  padding: 0 8px 1.2rem 8px;
   display: flex;
 }
 .searchbar input {
@@ -752,6 +874,38 @@ article figcaption {
   background-position: 10px center;
 }
 
+.settings {
+  display: flex;
+  padding: 20px;
+  gap: 4rem;
+}
+.settings nav {
+  flex: 1;
+  border-radius: 0.5rem;
+  border: 1px solid #3d444d;
+  background-color: #262626 !important;
+  max-height: 14.2rem;
+}
+.settings nav a {
+  display: block;
+  padding: 0.8rem;
+}
+.settings nav a:hover {
+  background-color: #3d444d;
+}
+.settings nav h5 {
+  margin: 10px 0 0 10px;
+}
+.settings .active {
+  background-color: #3d444d;
+}
+.settings .form-container {
+  flex: 3;
+}
+.settings .form {
+  margin: 0 0 1.2rem 0;
+}
+
 @media (max-width: 1200px) {
   .middle,
   .comments,
@@ -760,6 +914,13 @@ article figcaption {
   }
   .middle {
     width: 100% !important;
+  }
+  .messages {
+    top: 12%;
+    margin-right: 5%;
+    position: absolute;
+    left: auto !important;
+    right: 0 !important;
   }
 }
 @media (max-width: 1000px) {
@@ -776,6 +937,25 @@ article figcaption {
   .title {
     font-size: 1.5rem;
   }
+  .kard {
+    flex-direction: column-reverse;
+    gap: 15px;
+  }
+  .kard .img {
+    text-align: center;
+  }
+  .kard .image {
+    max-width: 100%;
+  }
+  .kard .author {
+    margin: 10px 0 0 0;
+  }
+  .settings {
+    flex-direction: column;
+  }
+  #bio > * {
+    font-size: 20px !important;
+  }
 }
 @media (max-width: 600px) {
   #postaction,
@@ -791,7 +971,7 @@ article figcaption {
 @media (max-width: 400px) {
   #postaction,
   #blogaction {
-    top: 20%;
+    top: 0%;
     margin-right: -5%;
     position: absolute;
     left: auto !important;

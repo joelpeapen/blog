@@ -6,9 +6,7 @@
 
 <div class="container middle">
     <main>
-        <div class="product-bar">
-            <h4 class="title">Search results for {{ query }} ({{ count }})</h4>
-        </div>
+        <h4 class="title">Search results for {{ query }} ({{ count }})</h4>
 
         {% include "./components/searchbar.html" with user=username query=query type=type %}
 

@@ -13,12 +13,16 @@
 
                 {% if user.is_authenticated and user == post.author %}
                 <div id="postaction">
-                    <div class="pill circle edit">
-                        <a href="{% url 'edit' post.id %}">Edit</a>
-                    </div>
-                    <div class="pill circle del">
-                        <a class="confirm" href="{% url 'delete' post.id %}">Del</a>
-                    </div>
+                    <a href="{% url 'edit' post.id %}">
+                        <div class="pill circle edit">
+                            <span class="icon is-small"><i class="fas fa-edit"></i></span>
+                        </div>
+                    </a>
+                    <a class="confirm" href="{% url 'delete' post.id %}">
+                        <div class="pill circle del">
+                            <span class="icon is-small"><i class="fas fa-trash"></i></span>
+                        </div>
+                    </a>
                 </div>
                 {% endif %}
             </div>
@@ -36,7 +40,7 @@
                         <img class="circlepic" src="/static{{ post.author.pic.url }}" alt="profile picture">
                     </a>
                 </div>
-                <div>
+                <div class="name">
                     <a href="{% url 'user' post.author %}">{{ post.author }}</a>
                     <p>{{ post.date }}</p>
                     <p>Updated {{ post.updated }}</p>
@@ -44,26 +48,30 @@
             </div>
             <div class="meta">
                 <div class="pill">
-                    <!-- <span class="icon is-small"><i class="fas fa-eye"></i></span> -->
-                    <p>{{ post.views }} views</p>
+                    <p><i class="fas fa-eye"></i> {{ post.views }}</p>
                 </div>
                 <div class="pill">
-                    <!-- <span class="icon is-small"><i class="fas fa-heart"></i></span> -->
                     {% if user.is_authenticated %}
                     <form id="like" action="{% url 'like' post.id %}" method="post">
                         {% csrf_token %}
-                        <a onClick="this.closest('form').submit()">{{ post.likes }} {% if post.likes == 0 or post.likes > 1 %}likes{% else %}like{% endif %}</a>
+                        <a onClick="this.closest('form').submit()">
+                            <span class="icon is-small"><i class="fas fa-heart"></i></span>
+                            {{ post.likes }}
+                        </a>
                     </form>
                     {% else %}
-                    <p>{{ post.likes }} likes</p>
+                    <span class="icon is-small"><i class="fas fa-heart"></i></span>
+                    <p> {{ post.likes }}</p>
                     {% endif %}
                 </div>
-                <div class="pill">
-                    <!-- <span class="icon is-small"><i class="fas fa-eye"></i></span> -->
-                    <a href="#comments">{{ count }} comments</a>
-                </div>
+                <a href="#comments">
+                    <div class="pill grey">
+                        <span class="icon is-small"><i class="fas fa-comment"></i></span>
+                        {{ count }}
+                    </div>
+                </a>
                 <div id="share" class="pill far-right">
-                    <!-- <span class="icon is-small"><i class="fas fa-share"></i></span> -->
+                    <span class="icon is-small"><i class="fas fa-copy"></i></span>
                     <a>Share</a>
                     <span id="copied" class="pill">Copied</span>
                 </div>
@@ -100,7 +108,7 @@
         <form id="tag-add-form" action="{% url 'tag-add' post.id %}" method="post">
             {% csrf_token %}
             <label for="tag-text"></label>
-            <input id="tag-text" name="tag" type="text" maxlength=20>
+            <input id="tag-text" name="tag" type="text" placeholder="add a tag" maxlength=20>
             <input type="submit" value="+">
         </form>
         {% endif %}
@@ -149,15 +157,21 @@
                     <a href="{% url 'user' comment.user %}">{{ comment.user }}</a>
                     <span>{{ comment.date }}</span>
                     {% if user.is_authenticated and user == comment.user %}
-                    <a id="edit-comment-{{ comment.id }}" class="edit-comment">Edit</a>
+                    <a id="edit-comment-{{ comment.id }}" class="edit-comment">
+                        <span class="icon is-small"><i class="fas fa-edit"></i></span>
+                    </a>
                     <form class="comment-delete" action="{% url 'comment-del' comment.id %}" method="post">
                         {% csrf_token %}
-                        <button type="submit" class="confirm">Delete</button>
+                        <button type="submit" class="confirm">
+                            <span class="icon is-small"><i class="fas fa-trash"></i></span>
+                        </button>
                     </form>
                     {% endif %}
                 </div>
                 <div class="content">
-                    <p id="user-comment-{{ comment.id }}">{{ comment.text | markdown | safe }}</p>
+                    <div id="user-comment-{{ comment.id }}">
+                        {{ comment.text | markdown | safe }}
+                    </div>
                     {% if user.is_authenticated and user == comment.user %}
                     <form class="form comment-form-edit" id="comment-form-edit-{{ comment.id }}" action="{% url 'comment-edit' comment.id %}" method="post">
                         {% csrf_token %}
@@ -180,7 +194,10 @@
                     {% if user.is_authenticated %}
                     <form class="comment-like" action="{% url 'comment-like' comment.id %}" method="post">
                         {% csrf_token %}
-                        <a onClick="this.closest('form').submit()">{{ comment.likes }} {% if comment.likes == 0 or comment.likes > 1 %}likes{% else %}like{% endif %}</a>
+                        <a onClick="this.closest('form').submit()">
+                            <span class="icon is-small"><i class="fas fa-heart"></i></span>
+                            {{ comment.likes }}
+                        </a>
                     </form>
                     {% endif %}
                 </div>

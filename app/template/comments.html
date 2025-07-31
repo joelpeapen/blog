@@ -25,7 +25,9 @@
                 {% if user.is_authenticated and user == c.user %}
                 <form class="comment-delete" action="{% url 'comment-del' c.id %}" method="post">
                     {% csrf_token %}
-                    <button type="submit" class="confirm">Delete</button>
+                    <button type="submit" class="confirm">
+                        <span class="icon is-small"><i class="fas fa-trash"></i></span>
+                    </button>
                 </form>
                 {% endif %}
             </div>

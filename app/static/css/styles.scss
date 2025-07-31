@@ -243,12 +243,6 @@ nav.navbar {
   margin: 0 0 10px 0;
 }
 
-.forms {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
 .form {
   padding: 1.2rem;
   border-radius: 0.5rem;
@@ -356,21 +350,26 @@ nav.navbar {
 .middle {
   max-width: 65%;
   overflow-wrap: break-word;
-  width: 70%;
+  width: 60%;
   margin: 0 auto !important;
 }
 
-.posts,
 .blogs {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.posts {
+  display: grid;
+  grid-template-rows: repeat(auto-fit, minmax(200px, 1fr));
   gap: 20px;
 }
 
 .subscribe {
   display: flex;
   justify-content: flex-start;
-  margin: 0 0 15px 0;
+  margin: 0 0 0 0;
   gap: 10px;
 
   #subscribe {
@@ -379,6 +378,98 @@ nav.navbar {
     a {
       width: 100%;
     }
+  }
+}
+
+.kard {
+  display: flex;
+  padding: 15px;
+  border-radius: 1em;
+  background-color: $grey-dark;
+
+  &:hover {
+    background-color: #2f2f2f;
+  }
+
+  #blogname {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin: 0 0 10px 0;
+  }
+
+  span {
+    color: $grey-light;
+  }
+
+  .splash {
+    max-width: 3rem;
+    margin: 0;
+  }
+
+  .author {
+    margin: auto 0 0 0;
+
+    img {
+      max-width: 2em !important;
+    }
+  }
+
+  .data {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .content {
+    margin: 10px 0 10px 0;
+  }
+
+  .img {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+
+    span {
+      margin: 0 0 10px 0;
+    }
+  }
+
+  .image {
+    max-width: 250px;
+
+    img {
+      max-height: 300px;
+      object-fit: cover;
+    }
+  }
+}
+
+.kard.blog {
+  flex-flow: column wrap;
+  justify-content: space-between;
+  padding: 0;
+
+  &> :not(:first-child) {
+    padding: 0 15px;
+  }
+
+  .author {
+    margin: 10px 0 0 0;
+    padding-bottom: 15px;
+  }
+
+  .image {
+    max-width: 100%;
+
+    img {
+      border-top-left-radius: 1em;
+      border-top-right-radius: 1em;
+    }
+  }
+
+  .media {
+    margin: 10px 0 0 0;
   }
 }
 
@@ -391,9 +482,19 @@ nav.navbar {
     margin: 10px 0;
     font-style: italic;
   }
+}
 
-  & {
-    width: 100%;
+.avatar {
+  display: flex;
+  align-items: center;
+
+  img {
+    max-width: 3rem;
+
+    &.user {
+      max-width: 6rem;
+      margin: 0 10px 0 0;
+    }
   }
 }
 
@@ -401,32 +502,39 @@ nav.navbar {
   display: flex;
   gap: 1em;
   margin: 20px 0 20px 0;
+  align-items: center;
 
-  .avatar {
-    display: flex;
-    align-items: center;
-
-    img {
-      max-width: 50px;
-    }
-  }
-
-  div:nth-of-type(2) {
-    display: flex;
-    flex-direction: column;
-
-    p {
-      font-size: 13px;
-    }
-  }
-
-  div:nth-of-type(3) {
+  .action {
     display: flex;
   }
 }
 
-.card .author {
-  margin: 20px 0 0 0;
+.author.name {
+  display: flex;
+
+  .avatar {
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  h1 {
+    color: $white;
+    font-size: 45px !important;
+    margin: 0 0 5px 0;
+  }
+
+  h2 {
+    color: $grey-light;
+  }
+}
+
+#bio>* {
+  margin: 10px 0 10px 0;
+  font-size: 25px !important;
+}
+
+#joined {
+  margin: 0 0 2rem 0;
 }
 
 .meta {
@@ -449,17 +557,20 @@ nav.navbar {
 @mixin pill($color) {
   border: 2px solid $color;
 
-  a {
+  a,
+  span {
     color: $color !important;
   }
 }
 
 .pill {
-  display: inline-block;
   border-radius: 20px;
   border: 1px solid $grey;
   padding: 0.5em;
   background-color: $grey-dark;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 
   &:hover {
     background-color: $grey-darker !important;
@@ -470,12 +581,28 @@ nav.navbar {
   }
 
   &.circle {
-    @include circle(40px, 40px, 50%);
+    @include circle(50px, 50px, 50%);
 
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 0;
+  }
+
+  &.grey {
+    color: #abb1bf;
+  }
+
+  &.notify {
+    @include pill($green);
+  }
+
+  &.edit {
+    @include pill($yellow);
+  }
+
+  &.del {
+    @include pill($red);
   }
 }
 
@@ -498,18 +625,6 @@ nav.navbar {
     text-align: center;
     z-index: 1000;
   }
-}
-
-.notify {
-  @include pill($green);
-}
-
-.edit {
-  @include pill($yellow);
-}
-
-.del {
-  @include pill($red);
 }
 
 #postaction,
@@ -537,7 +652,8 @@ figcaption {
   margin: 10px 0 0 0;
 }
 
-article {
+article,
+.comment {
   font-size: 25px;
 
   h1,
@@ -583,7 +699,8 @@ article {
     font-family: Helvetica;
   }
 
-  ul, ol {
+  ul,
+  ol {
     margin: 0 0 0 20px;
   }
 
@@ -697,8 +814,12 @@ article {
 .comment {
   display: flex;
 
+  p {
+    margin: 0 !important;
+  }
+
   .avatar {
-    margin: 20px 10px 0 0;
+    margin: 0px 10px 0 0;
 
     img {
       max-width: 50px;
@@ -708,7 +829,6 @@ article {
   .left {
     display: flex;
     flex-direction: column;
-    border-left: 3px solid $grey;
     margin: 20px 0 0 0;
     padding: 0 0 0 10px;
     width: 100%;
@@ -823,7 +943,7 @@ article {
 
   form {
     width: 100%;
-    padding: 1.2rem 8px;
+    padding: 0 8px 1.2rem 8px;
     display: flex;
   }
 
@@ -851,6 +971,45 @@ article {
   background-position: 10px center;
 }
 
+.settings {
+  display: flex;
+  padding: 20px;
+  gap: 4rem;
+
+  nav {
+    flex: 1;
+    border-radius: 0.5rem;
+    border: 1px solid $grey;
+    background-color: $grey-dark !important;
+    max-height: 14.2rem;
+
+    a {
+      display: block;
+      padding: 0.8rem;
+
+      &:hover {
+        background-color: $grey;
+      }
+    }
+
+    h5 {
+      margin: 10px 0 0 10px;
+    }
+  }
+
+  .active {
+    background-color: $grey;
+  }
+
+  .form-container {
+    flex: 3;
+  }
+
+  .form {
+    margin: 0 0 1.2rem 0;
+  }
+}
+
 @media (max-width: 1200px) {
 
   .middle,
@@ -861,6 +1020,10 @@ article {
 
   .middle {
     width: 100% !important;
+  }
+
+  .messages {
+    @include floater(12%, 5%);
   }
 }
 
@@ -884,6 +1047,31 @@ article {
   .title {
     font-size: 1.5rem;
   }
+
+  .kard {
+    flex-direction: column-reverse;
+    gap: 15px;
+
+    .img {
+      text-align: center;
+    }
+
+    .image {
+      max-width: 100%;
+    }
+
+    .author {
+      margin: 10px 0 0 0;
+    }
+  }
+
+  .settings {
+    flex-direction: column;
+  }
+
+  #bio>* {
+    font-size: 20px !important;
+  }
 }
 
 @media (max-width: 600px) {
@@ -899,6 +1087,6 @@ article {
 
   #postaction,
   #blogaction {
-    @include floater(20%, -5%);
+    @include floater(0%, -5%);
   }
 }

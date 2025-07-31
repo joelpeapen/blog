@@ -4,70 +4,68 @@
 
 {% block content %}
 
-    <div class="columns">
+    <div class="container settings">
         {% include 'components/settings_menu.html' with active="account"%}
 
-        <div class="column">
-            <div class="forms">
-                <div class="form">
-                    <p class="">Change Email</p>
-                    <form action="{% url 'email-change' %}" method="post">
-                        {% csrf_token %}
+        <div class="form-container">
+            <div class="form">
+                <p class="">Change Email</p>
+                <form action="{% url 'email-change' %}" method="post">
+                    {% csrf_token %}
 
-                        <div class="field">
-                            <label class="label" for="email">New Email</label>
-                            <div class="control">
-                                <input id="email" type="email" name="email" maxlength=254 placeholder="{{ user.email }}" required>
-                            </div>
+                    <div class="field">
+                        <label class="label" for="email">New Email</label>
+                        <div class="control">
+                            <input id="email" type="email" name="email" maxlength=254 placeholder="{{ user.email }}" required>
                         </div>
+                    </div>
 
-                        <div class="field">
-                            <p class="control">
-                                <button class="button is-success is-dark" type="submit" name="submit">Save</button>
-                            </p>
-                        </div>
-                    </form>
-                </div>
+                    <div class="field">
+                        <p class="control">
+                            <button class="button is-success is-dark" type="submit" name="submit">Save</button>
+                        </p>
+                    </div>
+                </form>
+            </div>
 
-                <div class="form">
-                    <p class="">Change Password</p>
-                    <form method="post">
-                        {% csrf_token %}
+            <div class="form">
+                <p class="">Change Password</p>
+                <form method="post">
+                    {% csrf_token %}
 
-                        <div class="field">
-                            <label class="label" for="old-password">Old Password*</label>
-                            <p class="control">
-                                <input id="old-password" type="password" name="old-password" required>
-                            </p>
-                        </div>
+                    <div class="field">
+                        <label class="label" for="old-password">Old Password*</label>
+                        <p class="control">
+                            <input id="old-password" type="password" name="old-password" required>
+                        </p>
+                    </div>
 
-                        <div class="field">
-                            <label class="label" for="password">New Password*</label>
-                            <p class="control">
-                                <input id="password" type="password" name="password" required>
-                            </p>
-                        </div>
+                    <div class="field">
+                        <label class="label" for="password">New Password*</label>
+                        <p class="control">
+                            <input id="password" type="password" name="password" required>
+                        </p>
+                    </div>
 
-                        <div class="field">
-                            <label class="label" for="confirm-pw">Confirm New Password*</label>
-                            <p class="control">
-                                <input id="confirm-pw" type="password" name="confirm-pw" required>
-                            </p>
-                        </div>
+                    <div class="field">
+                        <label class="label" for="confirm-pw">Confirm New Password*</label>
+                        <p class="control">
+                            <input id="confirm-pw" type="password" name="confirm-pw" required>
+                        </p>
+                    </div>
 
-                        <div class="field">
-                            <p class="control">
-                                <button class="button is-success is-dark" type="submit" name="submit">Save</button>
-                            </p>
-                        </div>
-                    </form>
-                </div>
-                <div class="danger">
-                    <form action="{% url "delete-user" %}" method="post">
-                        {% csrf_token %}
-                        <button class="button is-danger is-dark confirm" id="delete-user" type="submit" name=submit>Delete Account</button>
-                    </form>
-                </div>
+                    <div class="field">
+                        <p class="control">
+                            <button class="button is-success is-dark" type="submit" name="submit">Save</button>
+                        </p>
+                    </div>
+                </form>
+            </div>
+            <div class="danger">
+                <form action="{% url "delete-user" %}" method="post">
+                    {% csrf_token %}
+                    <button class="button is-danger is-dark confirm" id="delete-user" type="submit" name=submit>Delete Account</button>
+                </form>
             </div>
         </div>
     </div>

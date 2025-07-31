@@ -1,34 +1,50 @@
 <div class="container posts">
     {% for p in posts %}
-    <div class="card">
-        <div class="card-image">
+    <div class="kard">
+        <div class="data">
+            <a id="blogname" href="{%  url 'blog' p.blog %}">
+                <figure class="splash">
+                    <img src="/static{{ p.blog.splash.url }}">
+                </figure>
+                <span>{{ p.blog.name }}</span>
+            </a>
+
+            <a href="{%  url 'post' p.author p.id %}">
+                <p class="title is-4">{{ p.title }}</p>
+                <p class="subtitle">{{ p.subtitle }}</p>
+            </a>
+
+            <div class="author">
+                <div class="avatar">
+                    <a href="{% url 'user' p.author %}">
+                        <img class="is-48x48 circlepic" src="/static{{ p.author.pic.url }}" alt="profile picture">
+                    </a>
+                </div>
+                <div class="name">
+                    <a href="{% url 'user' p.author %}">{{ p.author }}</a>
+                </div>
+                <p>
+                    <span class="icon is-small"><i class="fas fa-eye"></i></span>
+                    {{ p.views }}
+                </p>
+                <p>
+                    <span class="icon is-small"><i class="fas fa-heart"></i></span>
+                    {{ p.likes }}
+                </p>
+                <p>
+                    <span class="icon is-small"><i class="fas fa-comment"></i></span>
+                    {{ p.comments }}
+                </p>
+            </div>
+        </div>
+
+        <div class="img">
+            <span>{{ p.date|date:"M d Y" }}</span>
             <a href="{%  url 'post' p.author p.id %}">
                 <figure class="image">
                     <img src="{% if p.splash %}/static{{ p.splash.url }}{% endif %}" alt="{{ p.splashdesc }}">
                 </figure>
             </a>
-        </div>
-        <div class="card-content">
-            <a href="{%  url 'post' p.author p.id %}">
-                <div class="content">
-                    <p class="title is-4">{{ p.title }}</p>
-                    <p class="subtitle">{{ p.subtitle }}</p>
-                </div>
-            </a>
-
-            <p>in <a href="{% url 'blog' p.blog.name %}">{{ p.blog }}</a></p>
-
-            <div class="author">
-                <div class="avatar">
-                    <a href="{% url 'user' p.author %}">
-                        <img class="circlepic" src="/static{{ p.author.pic.url }}" alt="profile picture">
-                    </a>
-                </div>
-                <div>
-                    <a href="{% url 'user' p.author %}">{{ p.author }}</a>
-                    <p>{{ p.date }}</p>
-                </div>
-            </div>
         </div>
     </div>
     {% endfor %}

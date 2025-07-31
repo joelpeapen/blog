@@ -3,13 +3,15 @@ from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.hashers import PBKDF2PasswordHasher
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from django.db.models import (
-    Q,
     BooleanField,
     Case,
     Count,
     Exists,
     OuterRef,
+    Q,
     Subquery,
     When,
 )
@@ -52,6 +54,13 @@ class Register(View):
         password = request.POST.get("password")
 
         if email and username and password:
+            try:
+                validate_email(email)
+                pass
+            except ValidationError:
+                messages.error(request, "Email must be a valid email!")
+                return redirect("/register")
+
             if User.objects.filter(email=email).exists():
                 messages.error(request, "A user with this email already exists")
                 return redirect("/register")
@@ -91,7 +100,7 @@ class Login(View):
 
         if username and password:
             if not User.objects.filter(username=username).exists():
-                messages.error(request, "No such user")
+                messages.error(request, "User does not exist")
                 return redirect("/login")
 
             user = authenticate(username=username, password=password)
@@ -114,8 +123,11 @@ class Logout(View):
     def get(self, request):
         if not request.user.is_authenticated:
             return redirect("/login")
+        ret = request.GET.get("return")
 
         logout(request)
+        if ret:
+            return redirect(ret)
         return redirect("/login")
 
 
@@ -137,6 +149,11 @@ class AppUser(View):
                 )
                 .order_by("-subscriber_count")
             )
+            posts = (
+                Post.objects.filter(author=profile)
+                .annotate(comments=Count("comment"))
+                .order_by("-date")
+            )
 
             return render(
                 request,
@@ -144,9 +161,10 @@ class AppUser(View):
                 {
                     "profile": profile,
                     "user": request.user,
-                    "posts": Post.objects.filter(author=profile).order_by("-date"),
+                    "posts": posts,
                     "blogs": blogs,
-                    "count": blogs.count(),
+                    "postcount": posts.count(),
+                    "blogcount": blogs.count(),
                     "type": "posts",
                 },
             )
@@ -166,15 +184,22 @@ class AppUser(View):
                 .order_by("-subscriber_count")
             )
 
+            posts = (
+                Post.objects.filter(author=request.user)
+                .annotate(comments=Count("comment"))
+                .order_by("-date")
+            )
+
             return render(
                 request,
                 "user.html",
                 {
                     "profile": request.user,
                     "user": request.user,
-                    "posts": Post.objects.filter(author=request.user).order_by("-date"),
+                    "posts": posts,
                     "blogs": blogs,
-                    "count": blogs.count(),
+                    "postcount": posts.count(),
+                    "blogcount": blogs.count(),
                     "type": "posts",
                 },
             )
@@ -213,7 +238,7 @@ class Settings(View):
         if username and username != user.username:
             if User.objects.filter(username=username).exists():
                 messages.error(request, "A user with this username already exists")
-                return redirect("/user/settings")
+                return redirect("/settings")
             user.username = username
 
         if fname != user.first_name:
@@ -230,7 +255,7 @@ class Settings(View):
 
         user.save()
         messages.success(request, "Profile Updated")
-        return redirect("/user/settings")
+        return redirect("/settings")
 
 
 class SettingsAccount(View):
@@ -267,7 +292,7 @@ class SettingsAccount(View):
             user.save()
             messages.success(request, "Password Changed")
 
-        return redirect("/user/settings/account")
+        return redirect("/settings/account")
 
 
 class SettingsNotify(View):
@@ -305,7 +330,7 @@ class SettingsNotify(View):
                 notify.on_sub = False
                 notify.save()
 
-        return redirect("/user/settings/notifications")
+        return redirect("/settings/notifications")
 
 
 def send_email_confirm(request):
@@ -344,9 +369,16 @@ def email_change(request):
         user = request.user
         new_email = request.POST.get("email")
 
+        try:
+            validate_email(new_email)
+            pass
+        except ValidationError:
+            messages.error(request, "Email must be a valid email!")
+            return redirect("/settings/account")
+
         if User.objects.filter(email=new_email).exists():
             messages.error(request, "A user with this email already exists")
-            return redirect("/user/settings/account")
+            return redirect("/settings/account")
 
         token, _ = EmailConfirmationToken.objects.get_or_create(user=user)
         send_confirmation_email(email=new_email, token_id=token.pk, change=True)
@@ -624,7 +656,7 @@ class Likes(View):
         if not request.user.is_authenticated:
             return redirect("/login")
 
-        posts = request.user.likes.all()
+        posts = request.user.likes.all().annotate(comments=Count("comment"))
         return render(
             request,
             "likes.html",
@@ -634,7 +666,7 @@ class Likes(View):
 
 class Posts(View):
     def get(self, request):
-        posts = Post.objects.all().order_by("-date")
+        posts = Post.objects.all().annotate(comments=Count("comment")).order_by("-date")
         count = posts.count()
         return render(
             request,
@@ -667,7 +699,11 @@ class Blogs(View):
 class UserBlog(View):
     def get(self, request, name):
         blog = get_object_or_404(Blog, name=name)
-        posts = Post.objects.filter(blog=blog)
+        posts = (
+            Post.objects.filter(blog=blog)
+            .annotate(comments=Count("comment"))
+            .order_by("-date")
+        )
         count = posts.count()
 
         nosplash = False
@@ -916,12 +952,16 @@ class Comments(View):
             user=request.user, blog=OuterRef("post__blog")
         )
 
-        comments = Comment.objects.filter(user=user).annotate(
-            viewable=Case(
-                When(post__subonly=True, then=Exists(subquery)),
-                When(post__subonly=False, then=True),
-                output_field=BooleanField(),
+        comments = (
+            Comment.objects.filter(user=user)
+            .annotate(
+                viewable=Case(
+                    When(post__subonly=True, then=Exists(subquery)),
+                    When(post__subonly=False, then=True),
+                    output_field=BooleanField(),
+                )
             )
+            .order_by("-date")
         )
 
         return render(
@@ -956,7 +996,7 @@ class CommentAdd(View):
                     messages.error(request, "Only subscribers can comment")
                     return redirect(f"/{post.author}/post/{post.id}")
 
-            Comment.objects.create(
+            c = Comment.objects.create(
                 text=comment, post=post, user=request.user, date=datetime.utcnow()
             )
 
@@ -965,12 +1005,12 @@ class CommentAdd(View):
                 if notify.on_comment:
                     send_comment_email(post.author.email, post, request.user, comment)
 
-            return redirect(f"/{post.author}/post/{id}")
+            return redirect(f"/{post.author}/post/{id}#cm{c.id}")
         else:
             messages.error(request, "Must add a comment and rating")
             return redirect(f"/{post.author}/post/{id}")
 
-        return redirect(f"/{post.author}/post/{id}#cm{comment.id}")
+        return redirect(f"/{post.author}/post/{id}")
 
 
 class CommentEdit(View):
@@ -1009,11 +1049,11 @@ class CommentDelete(View):
         comment = get_object_or_404(Comment, pk=id)
 
         if not request.user.is_authenticated:
-            return redirect(f"/{comment.post.author}/post/{comment.post.id}")
+            return redirect(request.META.get("HTTP_REFERER"))
 
         if comment.user == request.user:
             comment.delete()
-        return redirect(f"/{comment.post.author}/post/{comment.post.id}")
+        return redirect(request.META.get("HTTP_REFERER"))
 
 
 class CommentLike(View):
@@ -1039,23 +1079,15 @@ class CommentLike(View):
 
 class Tags(View):
     def get(self, request, name):
-        tags = Tag.objects.filter(name=name)
-        posts = set()
-
-        for tag in tags:
-            posts.update(tag.post_tags.all())
+        tag = get_object_or_404(Tag, name=name)
+        posts = tag.posts.all().annotate(comments=Count("comment")).order_by("-date")
 
         data = {
             "user": request.user,
-            "posts": list(posts),
-            "count": len(posts),
+            "posts": posts,
+            "count": posts.count(),
+            "tag": tag,
         }
-
-        try:
-            tag = tags[0]
-            data["tag"] = tag
-        except IndexError:
-            return redirect("/404")
 
         return render(request, "tags.html", data)
 
@@ -1073,6 +1105,7 @@ class TagAdd(View):
         if tag_name:
             tag, _ = Tag.objects.get_or_create(name=tag_name)
             post.tags.add(tag)
+            tag.posts.add(post)
         else:
             messages.error(request, "Tag cannot be empty")
 
@@ -1089,6 +1122,7 @@ class TagDelete(View):
 
         tag = get_object_or_404(Tag, pk=tid)
         post.tags.remove(tag)
+        tag.posts.remove(post)
 
         return redirect(f"/{post.author}/post/{pid}")
 
@@ -1164,7 +1198,11 @@ class Search(View):
             elif filter == "likes":
                 qf &= Q(id__in=request.user.likes.values_list("id", flat=True))
 
-            posts = Post.objects.filter(qf).order_by("-views")
+            posts = (
+                Post.objects.filter(qf)
+                .annotate(comments=Count("comment"))
+                .order_by("-date")
+            )
             data["posts"] = posts
             data["count"] = len(posts)
 
